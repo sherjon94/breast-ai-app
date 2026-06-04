@@ -572,11 +572,11 @@ function Settings(){
   const s=t.settings;
   const [notif,setNotif]=useState(true);
   const [auto,setAuto]=useState(false);
-  const [apiUrl,setApiUrl]=useState("http://localhost:8000");
+  const [apiUrl,setApiUrl]=useState("https://breast-ai-backend-production.up.railway.app");
   const [editApi,setEditApi]=useState(false);
   const [toast,setToast]=useState(null);
-  const [doctorName,setDoctorName]=useState("Dr. Azimov Sardor");
-  const [doctorDept,setDoctorDept]=useState("Radiodiagnostika bo'limi");
+  const [doctorName,setDoctorName]=useState("Dr.Rashidova Mahliyo");
+  const [doctorDept,setDoctorDept]=useState("Diagnostika bo'limi");
   const [editDoc,setEditDoc]=useState(false);
   const [apiStatus,setApiStatus]=useState(null);
   const [modal,setModal]=useState(null); // "pdf"|"backup"|"report"
