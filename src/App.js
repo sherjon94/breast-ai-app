@@ -597,12 +597,24 @@ function Settings(){
 
   function toast2(msg,type="info"){setToast({msg,type});}
 
-  async function checkApi(){
-    setApiStatus("checking");
-    await new Promise(r=>setTimeout(r,1400));
+async function checkApi(){
+  setApiStatus("checking");
+  try {
+    const res = await fetch(`${API_URL}/health`, {
+      signal: AbortSignal.timeout(15000)
+    });
+    const data = await res.json();
+    if(data.status === "ok"){
+      setApiStatus("ok");
+      toast2(s.connected, "success");
+    } else {
+      setApiStatus("error");
+    }
+  } catch(e){
     setApiStatus("error");
-    toast2(s.toastBackend,"warn");
-    setTimeout(()=>setApiStatus(null),3000);
+    toast2(s.toastBackend, "warn");
+  }
+}
   }
 
   function downloadBackup(){
