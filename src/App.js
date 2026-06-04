@@ -449,18 +449,7 @@ function NewAnalysis({initialModality="uzi",onBack}){
       {ins&&<div style={{marginTop:10,padding:"8px 12px",background:"#EAF3DE",borderRadius:8,fontSize:12,color:"#2D9E6B",fontWeight:600}}>🎯 {t.newAnal.inSituNote}</div>}
       <div style={{marginTop:12}}><ConfBar value={0.88}/></div>
     </Card>}
-    <button onClick={async()=>{setLoading(true);
-try {
-  const endpoint = mod === "combined" ? "combined" : mod === "mammo" ? "mammo" : "uzi";
-  const uziBody = { shape, margin:"circumscribed", echogenicity:echo, posterior_feature:posterior, orientation, size_a_mm:sizeA, size_b_mm:sizeB };
-  const mammoBody = { density, has_calcification:calcification, has_architectural_distortion:distortion, has_asymmetry:false };
-  const body = mod==="uzi" ? uziBody : mod==="mammo" ? mammoBody : { uzi:uziBody, mammo:mammoBody };
-  const res = await fetch(`${API_URL}/api/analyze/${endpoint}`, {
-    method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)
-  });
-  if(res.ok){ const data=await res.json(); setApiResult(data); }
-} catch(e){ console.log("Mock rejim"); }
-setLoading(false); setAnalyzed(true);}}
+    <button onClick={async()=>{setLoading(true);await new Promise(r=>setTimeout(r,1600));setLoading(false);setAnalyzed(true);}}
       style={{width:"100%",padding:14,borderRadius:12,border:"none",background:loading?"#8FA4B2":"#0B6E8A",color:"#fff",fontWeight:700,fontSize:14,cursor:loading?"not-allowed":"pointer",transition:"background .2s"}}>
       {loading?t.newAnal.btnLoading:analyzed?t.newAnal.btnRetry:t.newAnal.btnStart}
     </button>
@@ -583,7 +572,7 @@ function Settings(){
   const s=t.settings;
   const [notif,setNotif]=useState(true);
   const [auto,setAuto]=useState(false);
-  const [apiUrl,setApiUrl]=useState("https://breast-ai-backend-production.up.railway.app");
+  const [apiUrl,setApiUrl]=useState("http://localhost:8000");
   const [editApi,setEditApi]=useState(false);
   const [toast,setToast]=useState(null);
   const [doctorName,setDoctorName]=useState("Dr. Azimov Sardor");
@@ -597,24 +586,12 @@ function Settings(){
 
   function toast2(msg,type="info"){setToast({msg,type});}
 
-async function checkApi(){
-  setApiStatus("checking");
-  try {
-    const res = await fetch(`${API_URL}/health`, {
-      signal: AbortSignal.timeout(15000)
-    });
-    const data = await res.json();
-    if(data.status === "ok"){
-      setApiStatus("ok");
-      toast2(s.connected, "success");
-    } else {
-      setApiStatus("error");
-    }
-  } catch(e){
+  async function checkApi(){
+    setApiStatus("checking");
+    await new Promise(r=>setTimeout(r,1400));
     setApiStatus("error");
-    toast2(s.toastBackend, "warn");
-  }
-}
+    toast2(s.toastBackend,"warn");
+    setTimeout(()=>setApiStatus(null),3000);
   }
 
   function downloadBackup(){
@@ -755,7 +732,6 @@ export default function App(){
   const [tab,setTab]=useState("dashboard");
   const [selectedPatient,setSelectedPatient]=useState(null);
   const [newAnalysisMod,setNewAnalysisMod]=useState(null);
-  const [apiResult, setApiResult] = useState(null);
   const t=T[lang]||T.uz;
   const bg=dark?"#121920":"#EEF3F8", hbg=dark?"#1A232E":"#fff", hborder=dark?"#2E3A47":"#DDE6ED", tx=dark?"#E8EFF5":"#0D1B2A";
 
