@@ -646,7 +646,7 @@ async function checkApi(){
     setTimeout(()=>{setReportSent(false);setReportText("");setModal(null);toast2(s.toastReport,"success");},1500);
   }
 
-  return <div>
+  return <div style={{paddingBottom:20}}>
     {toast&&<Toast msg={toast.msg} type={toast.type} onClose={()=>setToast(null)}/>}
 
     {modal==="pdf"&&<Modal title={s.pdfModalTitle} onClose={()=>setModal(null)}>
