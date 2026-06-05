@@ -572,7 +572,7 @@ function Settings(){
   const s=t.settings;
   const [notif,setNotif]=useState(true);
   const [auto,setAuto]=useState(false);
-  const [apiUrl,setApiUrl]=useState("https://breast-ai-backend-production.up.railway.app");
+  const [apiUrl,setApiUrl]=useState("https://breast-ai-backend.onrender.com");
   const [editApi,setEditApi]=useState(false);
   const [toast,setToast]=useState(null);
   const [doctorName,setDoctorName]=useState("Dr.Rashidova Mahliyo");
