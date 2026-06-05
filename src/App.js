@@ -405,7 +405,7 @@ function NewAnalysis({initialModality="uzi",onBack}){
         </button>
       ))}
     </div>
-    <div style={{border:`2px dashed ${dark?"#2E3A47":"#DDE6ED"}`,borderRadius:14,padding:24,textAlign:"center",marginBottom:20,cursor:"pointer"}} onClick={()=>alert("Fayl tanlash oynasi (backend ulanganda ishlaydi)")}>
+    <div style={{border:`2px dashed ${dark?"#2E3A47":"#DDE6ED"}`,borderRadius:14,padding:24,textAlign:"center",marginBottom:20,cursor:"pointer"}} >
       <div style={{fontSize:28}}>📁</div>
       <div style={{fontSize:13,color:ts,marginTop:6}}>{t.newAnal.uploadLabel}</div>
       <div style={{fontSize:11,color:"#8FA4B2"}}>{t.newAnal.uploadSub}</div>
