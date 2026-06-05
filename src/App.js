@@ -5,7 +5,7 @@ import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, ResponsiveCo
 const T = {
   uz: {
     appName:"Breast AI", appSub:"Multimodal diagnostika tizimi", newAnalysis:"+ Yangi tahlil", back:"← Orqaga",
-    tabs:{ dashboard:"Dashboard", patients:"Bemorlar", history:"Tarix", stats:"Statistika", settings:"Sozlamalar" },
+    tabs:{ dashboard:"Dashboard", patients:"Bemorlar", stats:"Statistika", settings:"Sozlamalar" },
     dash:{ totalPatients:"Jami bemorlar", urgent:"Shoshilinch", inSitu:"In situ aniqlangan", aiConf:"AI ishonch", thisMonth:"Bu oy", biRads46:"BI-RADS 4–6", upTo10mm:"≤10mm", avg:"O'rtacha", quickAnalysis:"Tezkor tahlil", recentPatients:"So'nggi bemorlar" },
     modality:{ uzi:"UZI", mammo:"Mammo", combined:"Kombinatsiya" },
     patients:{ title:"Bemorlar", search:"Ism bo'yicha qidirish...", sortDate:"Sana", sortBiRads:"BI-RADS", sortName:"Ism", clear:"✕ Tozalash", notFound:"Bemor topilmadi", changeFilter:"Qidiruv yoki filtrni o'zgartiring" },
@@ -18,7 +18,7 @@ const T = {
   },
   ru: {
     appName:"Breast AI", appSub:"Мультимодальная диагностика", newAnalysis:"+ Новый анализ", back:"← Назад",
-    tabs:{ dashboard:"Главная", patients:"Пациенты", history:"История", stats:"Статистика", settings:"Настройки" },
+    tabs:{ dashboard:"Главная", patients:"Пациенты", stats:"Статистика", settings:"Настройки" },
     dash:{ totalPatients:"Всего пациентов", urgent:"Срочные", inSitu:"Выявлено in situ", aiConf:"Точность ИИ", thisMonth:"За месяц", biRads46:"BI-RADS 4–6", upTo10mm:"≤10мм", avg:"Среднее", quickAnalysis:"Быстрый анализ", recentPatients:"Последние пациенты" },
     modality:{ uzi:"УЗИ", mammo:"Маммо", combined:"Комбинация" },
     patients:{ title:"Пациенты", search:"Поиск по имени...", sortDate:"Дата", sortBiRads:"BI-RADS", sortName:"Имя", clear:"✕ Сбросить", notFound:"Пациент не найден", changeFilter:"Измените запрос или фильтр" },
@@ -31,7 +31,7 @@ const T = {
   },
   en: {
     appName:"Breast AI", appSub:"Multimodal Diagnostic System", newAnalysis:"+ New Analysis", back:"← Back",
-    tabs:{ dashboard:"Dashboard", patients:"Patients", history:"History", stats:"Statistics", settings:"Settings" },
+    tabs:{ dashboard:"Dashboard", patients:"Patients", stats:"Statistics", settings:"Settings" },
     dash:{ totalPatients:"Total Patients", urgent:"Urgent Cases", inSitu:"In Situ Detected", aiConf:"AI Confidence", thisMonth:"This Month", biRads46:"BI-RADS 4–6", upTo10mm:"≤10mm", avg:"Average", quickAnalysis:"Quick Analysis", recentPatients:"Recent Patients" },
     modality:{ uzi:"Ultrasound", mammo:"Mammography", combined:"Combined" },
     patients:{ title:"Patients", search:"Search by name...", sortDate:"Date", sortBiRads:"BI-RADS", sortName:"Name", clear:"✕ Clear", notFound:"No patients found", changeFilter:"Change your search or filter" },
@@ -187,6 +187,7 @@ function Dashboard({onNewAnalysis,onPatient}){
     {label:t.dash.urgent,value:urgent,sub:t.dash.biRads46,color:"#E86B2A",icon:"⚠️"},
     {label:t.dash.inSitu,value:inSituCount,sub:t.dash.upTo10mm,color:"#2D9E6B",icon:"🎯"},
     {label:t.dash.aiConf,value:avgConf>0?`${avgConf}%`:"—",sub:t.dash.avg,color:"#6A3DAA",icon:"✨"},
+  ];
   const tx=dark?"#E8EFF5":"#0D1B2A", ts=dark?"#8FA4B2":"#52687A";
   return <div>
     <div style={{marginBottom:24}}>
@@ -967,8 +968,8 @@ export default function App(){
   const t=T[lang]||T.uz;
   const bg=dark?"#121920":"#EEF3F8", hbg=dark?"#1A232E":"#fff", hborder=dark?"#2E3A47":"#DDE6ED", tx=dark?"#E8EFF5":"#0D1B2A";
 
-  const TABS=["dashboard","patients","history","stats","settings"];
-  const ICONS=["📊","👥","📋","📈","⚙️"];
+  const TABS=["dashboard","patients","stats","settings"];
+  const ICONS=["📊","👥","📈","⚙️"];
 
   function goTab(id){setTab(id);setSelectedPatient(null);setNewAnalysisMod(null);}
 
@@ -977,7 +978,6 @@ export default function App(){
     if(newAnalysisMod!==null) return <NewAnalysis initialModality={newAnalysisMod} onBack={()=>setNewAnalysisMod(null)}/>;
     if(tab==="dashboard") return <Dashboard onNewAnalysis={mod=>{setNewAnalysisMod(mod);}} onPatient={p=>{setSelectedPatient(p);}}/>;
     if(tab==="patients") return <PatientsList onPatient={p=>{setSelectedPatient(p);}}/>;
-    if(tab==="history") return <HistoryScreen/>;
     if(tab==="stats") return <Statistics/>;
     if(tab==="settings") return <Settings/>;
   }
