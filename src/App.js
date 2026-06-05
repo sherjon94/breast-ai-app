@@ -568,18 +568,17 @@ function Statistics(){
 
 // ─── SETTINGS ─────────────────────────────────────────────────────────────────
 function Settings(){
-  const {lang,t,setLang,dark,setDark}=useApp();
+  const {lang,t,setLang,dark,setDark,apiUrl,setApiUrl}=useApp();
   const s=t.settings;
   const [notif,setNotif]=useState(true);
   const [auto,setAuto]=useState(false);
-  
   const [editApi,setEditApi]=useState(false);
   const [toast,setToast]=useState(null);
   const [doctorName,setDoctorName]=useState("Dr.Rashidova Mahliyo");
   const [doctorDept,setDoctorDept]=useState("Diagnostika bo'limi");
   const [editDoc,setEditDoc]=useState(false);
   const [apiStatus,setApiStatus]=useState(null);
-  const [modal,setModal]=useState(null); // "pdf"|"backup"|"report"
+  const [modal,setModal]=useState(null);
   const [reportText,setReportText]=useState("");
   const [reportSent,setReportSent]=useState(false);
   const tx=dark?"#E8EFF5":"#0D1B2A";
@@ -588,10 +587,16 @@ function Settings(){
 
   async function checkApi(){
     setApiStatus("checking");
-    await new Promise(r=>setTimeout(r,1400));
-    setApiStatus("error");
-    toast2(s.toastBackend,"warn");
-    setTimeout(()=>setApiStatus(null),3000);
+    try {
+      const res = await fetch(`${apiUrl}/health`,{signal:AbortSignal.timeout(15000)});
+      const data = await res.json();
+      if(data.status==="ok"){setApiStatus("ok");toast2(s.connected,"success");}
+      else{setApiStatus("error");toast2(s.toastBackend,"warn");}
+    } catch(e){
+      setApiStatus("error");
+      toast2(s.toastBackend,"warn");
+    }
+    setTimeout(()=>setApiStatus(null),4000);
   }
 
   function downloadBackup(){
