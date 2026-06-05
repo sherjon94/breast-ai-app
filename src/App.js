@@ -177,16 +177,16 @@ function SSection({title,children}){
 
 // ─── DASHBOARD ────────────────────────────────────────────────────────────────
 function Dashboard({onNewAnalysis,onPatient}){
-  const {t,dark}=useApp();
-  const urgent=PATIENTS.filter(p=>p.analyses[0].birads>=4).length;
-  const inSituCount=PATIENTS.filter(p=>inSitu(p.analyses[0].uzi)).length;
-  const avgConf=Math.round(PATIENTS.reduce((s,p)=>s+p.analyses[0].confidence,0)/PATIENTS.length*100);
+  const {t,dark,history}=useApp();
+  const allRecords=history||[];
+  const urgent=allRecords.filter(h=>h.birads>=4).length;
+  const inSituCount=allRecords.filter(h=>h.isInSitu).length;
+  const avgConf=allRecords.length>0?Math.round(allRecords.reduce((s,h)=>s+h.confidence,0)/allRecords.length*100):0;
   const stats=[
-    {label:t.dash.totalPatients,value:PATIENTS.length,sub:t.dash.thisMonth,color:"#0B6E8A",icon:"👤"},
+    {label:t.dash.totalPatients,value:allRecords.length,sub:t.dash.thisMonth,color:"#0B6E8A",icon:"👤"},
     {label:t.dash.urgent,value:urgent,sub:t.dash.biRads46,color:"#E86B2A",icon:"⚠️"},
     {label:t.dash.inSitu,value:inSituCount,sub:t.dash.upTo10mm,color:"#2D9E6B",icon:"🎯"},
-    {label:t.dash.aiConf,value:`${avgConf}%`,sub:t.dash.avg,color:"#6A3DAA",icon:"✨"},
-  ];
+    {label:t.dash.aiConf,value:avgConf>0?`${avgConf}%`:"—",sub:t.dash.avg,color:"#6A3DAA",icon:"✨"},
   const tx=dark?"#E8EFF5":"#0D1B2A", ts=dark?"#8FA4B2":"#52687A";
   return <div>
     <div style={{marginBottom:24}}>
@@ -213,29 +213,38 @@ function Dashboard({onNewAnalysis,onPatient}){
       ))}
     </div>
     <div style={{fontSize:15,fontWeight:700,color:tx,marginBottom:12}}>{t.dash.recentPatients}</div>
-    <div style={{display:"flex",flexDirection:"column",gap:10}}>
-      {PATIENTS.map(p=>{
-        const a=p.analyses[0];
-        return <Card key={p.id} style={{cursor:"pointer",borderColor:a.birads>=4?bc(a.birads)+"55":dark?"#2E3A47":"#DDE6ED"}} onClick={()=>onPatient(p)}>
-          <div style={{display:"flex",alignItems:"flex-start",gap:12}}>
-            <div style={{width:44,height:44,borderRadius:12,background:"#E6F1FB",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,fontSize:14,color:"#0B6E8A",flexShrink:0}}>{ini(p.name)}</div>
-            <div style={{flex:1,minWidth:0}}>
-              <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:4}}>
-                <span style={{fontWeight:600,fontSize:14,color:tx}}>{p.name}</span>
-                <Badge cat={a.birads}/>
-                {inSitu(a.uzi)&&<span style={{fontSize:10,fontWeight:700,color:"#2D9E6B",background:"#EAF3DE",padding:"2px 7px",borderRadius:5}}>{t.inSituBadge}</span>}
+    {allRecords.length===0
+      ?<Card style={{textAlign:"center",padding:"32px 16px"}}>
+        <div style={{fontSize:36,marginBottom:10}}>📭</div>
+        <div style={{fontSize:14,color:ts}}>Hali tahlil qilinmagan</div>
+        <div style={{fontSize:12,color:"#8FA4B2",marginTop:4}}>Yangi tahlil boshlang</div>
+        <button onClick={()=>onNewAnalysis("uzi")} style={{marginTop:14,padding:"10px 24px",borderRadius:10,border:"none",background:"#0B6E8A",color:"#fff",fontWeight:700,fontSize:13,cursor:"pointer"}}>+ Yangi tahlil</button>
+      </Card>
+      :<div style={{display:"flex",flexDirection:"column",gap:10}}>
+        {allRecords.slice(0,5).map(h=>{
+          const fmtDate=(iso)=>{const m=["Yan","Fev","Mar","Apr","May","Iyn","Iyl","Avg","Sen","Okt","Noy","Dek"],d=new Date(iso);return `${d.getDate()} ${m[d.getMonth()]}`;};
+          return <Card key={h.id} style={{cursor:"pointer",borderColor:h.birads>=4?bc(h.birads)+"55":dark?"#2E3A47":"#DDE6ED"}}>
+            <div style={{display:"flex",alignItems:"flex-start",gap:12}}>
+              <div style={{width:44,height:44,borderRadius:12,background:"#E6F1FB",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,fontSize:14,color:"#0B6E8A",flexShrink:0}}>
+                {h.patientName.split(" ").map(w=>w[0]).slice(0,2).join("")}
               </div>
-              <div style={{display:"flex",gap:8,alignItems:"center",marginBottom:8,flexWrap:"wrap"}}>
-                <span style={{fontSize:12,color:ts}}>{p.age} {t.age}</span>
-                <ModalityTag m={a.modality}/>
-                <span style={{fontSize:11,color:"#8FA4B2",marginLeft:"auto"}}>{fmtD(a.date)}</span>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:4}}>
+                  <span style={{fontWeight:600,fontSize:14,color:tx}}>{h.patientName}</span>
+                  <Badge cat={h.birads}/>
+                  {h.isInSitu&&<span style={{fontSize:10,fontWeight:700,color:"#2D9E6B",background:"#EAF3DE",padding:"2px 7px",borderRadius:5}}>{t.inSituBadge}</span>}
+                </div>
+                <div style={{display:"flex",gap:8,alignItems:"center",marginBottom:8,flexWrap:"wrap"}}>
+                  {h.patientAge&&<span style={{fontSize:12,color:ts}}>{h.patientAge} {t.age}</span>}
+                  <ModalityTag m={h.modality}/>
+                  <span style={{fontSize:11,color:"#8FA4B2",marginLeft:"auto"}}>{fmtDate(h.date)}</span>
+                </div>
+                <ConfBar value={h.confidence}/>
               </div>
-              <ConfBar value={a.confidence}/>
             </div>
-          </div>
-        </Card>;
-      })}
-    </div>
+          </Card>;
+        })}
+      </div>}
   </div>;
 }
 
@@ -533,16 +542,17 @@ function NewAnalysis({initialModality="uzi",onBack}){
 
 // ─── STATISTICS ───────────────────────────────────────────────────────────────
 function Statistics(){
-  const {t,dark}=useApp();
-  const biRadsDist=[2,3,4,5].map(cat=>({name:`BR${cat}`,value:PATIENTS.filter(p=>p.analyses[0].birads===cat).length,color:bc(cat)})).filter(d=>d.value>0);
+  const {t,dark,history}=useApp();
+  const all = history.length>0 ? history : [];
+  const biRadsDist=[2,3,4,5].map(cat=>({name:`BR${cat}`,value:all.filter(h=>h.birads===cat).length,color:bc(cat)})).filter(d=>d.value>0);
   const modalDist=[
-    {name:t.modality.uzi,value:PATIENTS.filter(p=>p.analyses[0].modality==="uzi").length,color:"#0B6E8A"},
-    {name:t.modality.mammo,value:PATIENTS.filter(p=>p.analyses[0].modality==="mammo").length,color:"#6A3DAA"},
-    {name:t.modality.combined,value:PATIENTS.filter(p=>p.analyses[0].modality==="combined").length,color:"#1A7A5E"},
+    {name:t.modality.uzi,value:all.filter(h=>h.modality==="uzi").length,color:"#0B6E8A"},
+    {name:t.modality.mammo,value:all.filter(h=>h.modality==="mammo").length,color:"#6A3DAA"},
+    {name:t.modality.combined,value:all.filter(h=>h.modality==="combined").length,color:"#1A7A5E"},
   ];
-  const confData=PATIENTS.map((p,i)=>({name:`T${i+1}`,value:Math.round(p.analyses[0].confidence*100)}));
-  const inSituCount=PATIENTS.filter(p=>inSitu(p.analyses[0].uzi)).length;
-  const avgConf=Math.round(PATIENTS.reduce((s,p)=>s+p.analyses[0].confidence,0)/PATIENTS.length*100);
+  const confData=all.slice(0,10).map((h,i)=>({name:`T${i+1}`,value:Math.round(h.confidence*100)}));
+  const inSituCount=all.filter(h=>h.isInSitu).length;
+  const avgConf=all.length>0?Math.round(all.reduce((s,h)=>s+h.confidence,0)/all.length*100):0;
   const tx=dark?"#E8EFF5":"#0D1B2A";
 
   function downloadCSV(){
@@ -582,7 +592,7 @@ function Statistics(){
     </div>
     <div style={{fontSize:13,color:"#52687A",marginBottom:20}}>May 2025</div>
     <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10,marginBottom:20}}>
-      {[[t.stats.totalAnalyses,PATIENTS.length,"#0B6E8A"],[t.stats.aiConf,`${avgConf}%`,"#6A3DAA"],[t.stats.urgentCases,PATIENTS.filter(p=>p.analyses[0].birads>=4).length,"#E86B2A"]].map(([l,v,c])=>(
+      {[[t.stats.totalAnalyses,all.length,"#0B6E8A"],[t.stats.aiConf,avgConf>0?`${avgConf}%`:"—","#6A3DAA"],[t.stats.urgentCases,all.filter(h=>h.birads>=4).length,"#E86B2A"]].map(([l,v,c])=>(
         <Card key={l} style={{padding:14,textAlign:"center"}}><div style={{fontSize:22,fontWeight:800,color:c,letterSpacing:"-1px"}}>{v}</div><div style={{fontSize:11,color:"#8FA4B2",marginTop:3}}>{l}</div></Card>
       ))}
     </div>
@@ -635,7 +645,7 @@ function Statistics(){
       <div style={{height:8,borderRadius:8,background:"#C0DD97",overflow:"hidden",marginBottom:8}}>
         <div style={{width:`${inSituCount/PATIENTS.length*100}%`,height:"100%",background:"#2D9E6B",borderRadius:8}}/>
       </div>
-      <div style={{fontSize:12,color:"#3B6D11"}}>{Math.round(inSituCount/PATIENTS.length*100)}% {t.stats.inSituDesc}</div>
+      <div style={{fontSize:12,color:"#3B6D11"}}>{all.length>0?Math.round(inSituCount/all.length*100):0}% {t.stats.inSituDesc}</div>
       <div style={{fontSize:12,color:"#3B6D11",marginTop:4}}>{t.stats.inSituEffect}</div>
     </Card>
   </div>;
