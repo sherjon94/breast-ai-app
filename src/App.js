@@ -5,7 +5,7 @@ import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, ResponsiveCo
 const T = {
   uz: {
     appName:"Breast AI", appSub:"Multimodal diagnostika tizimi", newAnalysis:"+ Yangi tahlil", back:"← Orqaga",
-    tabs:{ dashboard:"Dashboard", patients:"Bemorlar", stats:"Statistika", settings:"Sozlamalar" },
+    tabs:{ dashboard:"Dashboard", patients:"Bemorlar", history:"Tarix", stats:"Statistika", settings:"Sozlamalar" },
     dash:{ totalPatients:"Jami bemorlar", urgent:"Shoshilinch", inSitu:"In situ aniqlangan", aiConf:"AI ishonch", thisMonth:"Bu oy", biRads46:"BI-RADS 4–6", upTo10mm:"≤10mm", avg:"O'rtacha", quickAnalysis:"Tezkor tahlil", recentPatients:"So'nggi bemorlar" },
     modality:{ uzi:"UZI", mammo:"Mammo", combined:"Kombinatsiya" },
     patients:{ title:"Bemorlar", search:"Ism bo'yicha qidirish...", sortDate:"Sana", sortBiRads:"BI-RADS", sortName:"Ism", clear:"✕ Tozalash", notFound:"Bemor topilmadi", changeFilter:"Qidiruv yoki filtrni o'zgartiring" },
@@ -18,7 +18,7 @@ const T = {
   },
   ru: {
     appName:"Breast AI", appSub:"Мультимодальная диагностика", newAnalysis:"+ Новый анализ", back:"← Назад",
-    tabs:{ dashboard:"Главная", patients:"Пациенты", stats:"Статистика", settings:"Настройки" },
+    tabs:{ dashboard:"Главная", patients:"Пациенты", history:"История", stats:"Статистика", settings:"Настройки" },
     dash:{ totalPatients:"Всего пациентов", urgent:"Срочные", inSitu:"Выявлено in situ", aiConf:"Точность ИИ", thisMonth:"За месяц", biRads46:"BI-RADS 4–6", upTo10mm:"≤10мм", avg:"Среднее", quickAnalysis:"Быстрый анализ", recentPatients:"Последние пациенты" },
     modality:{ uzi:"УЗИ", mammo:"Маммо", combined:"Комбинация" },
     patients:{ title:"Пациенты", search:"Поиск по имени...", sortDate:"Дата", sortBiRads:"BI-RADS", sortName:"Имя", clear:"✕ Сбросить", notFound:"Пациент не найден", changeFilter:"Измените запрос или фильтр" },
@@ -31,7 +31,7 @@ const T = {
   },
   en: {
     appName:"Breast AI", appSub:"Multimodal Diagnostic System", newAnalysis:"+ New Analysis", back:"← Back",
-    tabs:{ dashboard:"Dashboard", patients:"Patients", stats:"Statistics", settings:"Settings" },
+    tabs:{ dashboard:"Dashboard", patients:"Patients", history:"History", stats:"Statistics", settings:"Settings" },
     dash:{ totalPatients:"Total Patients", urgent:"Urgent Cases", inSitu:"In Situ Detected", aiConf:"AI Confidence", thisMonth:"This Month", biRads46:"BI-RADS 4–6", upTo10mm:"≤10mm", avg:"Average", quickAnalysis:"Quick Analysis", recentPatients:"Recent Patients" },
     modality:{ uzi:"Ultrasound", mammo:"Mammography", combined:"Combined" },
     patients:{ title:"Patients", search:"Search by name...", sortDate:"Date", sortBiRads:"BI-RADS", sortName:"Name", clear:"✕ Clear", notFound:"No patients found", changeFilter:"Change your search or filter" },
@@ -45,7 +45,7 @@ const T = {
 };
 
 // ─── CONTEXT ──────────────────────────────────────────────────────────────────
-const AppCtx = createContext({ lang:"uz", t:T.uz, setLang:()=>{}, dark:false, setDark:()=>{}, apiUrl:"https://breast-ai-backend.onrender.com", setApiUrl:()=>{} });
+const AppCtx = createContext({ lang:"uz", t:T.uz, setLang:()=>{}, dark:false, setDark:()=>{}, apiUrl:"https://breast-ai-backend.onrender.com", setApiUrl:()=>{}, history:[], addToHistory:()=>{} });
 function useApp(){ return useContext(AppCtx); }
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
@@ -353,7 +353,7 @@ function PatientDetail({patient,onBack}){
 
 // ─── NEW ANALYSIS ─────────────────────────────────────────────────────────────
 function NewAnalysis({initialModality="uzi",onBack}){
-  const {t,dark}=useApp();
+  const {t,dark,addToHistory}=useApp();
   const [mod,setMod]=useState(initialModality);
   const [shape,setShape]=useState("oval");
   const [echo,setEcho]=useState("isoechoic");
@@ -366,6 +366,11 @@ function NewAnalysis({initialModality="uzi",onBack}){
   const [distortion,setDistortion]=useState(false);
   const [analyzed,setAnalyzed]=useState(false);
   const [loading,setLoading]=useState(false);
+  const [uploadedFile,setUploadedFile]=useState(null);
+  const [patientName,setPatientName]=useState("");
+  const [patientAge,setPatientAge]=useState("");
+  const [patientGender,setPatientGender]=useState("Ayol");
+  const [patientNotes,setPatientNotes]=useState("");
   const tx=dark?"#E8EFF5":"#0D1B2A", ts=dark?"#8FA4B2":"#52687A";
 
   function calcBiRads(){
@@ -393,9 +398,38 @@ function NewAnalysis({initialModality="uzi",onBack}){
     </div>;
   }
 
+  const inputStyle = {width:"100%",padding:"9px 12px",borderRadius:10,border:`1px solid ${dark?"#2E3A47":"#DDE6ED"}`,background:dark?"#1E2733":"#fff",fontSize:13,color:tx,outline:"none",boxSizing:"border-box"};
+
   return <div>
     <button onClick={onBack} style={{display:"flex",alignItems:"center",gap:6,background:"none",border:"none",cursor:"pointer",color:"#0B6E8A",fontSize:13,fontWeight:600,marginBottom:18,padding:0}}>{t.back}</button>
     <div style={{fontSize:22,fontWeight:800,color:tx,marginBottom:6}}>{t.newAnal.title}</div>
+
+    <Card style={{marginBottom:16}}>
+      <div style={{fontSize:14,fontWeight:700,color:"#0B6E8A",marginBottom:14}}>👤 Bemor ma'lumotlari</div>
+      <div style={{marginBottom:10}}>
+        <div style={{fontSize:12,color:ts,marginBottom:5}}>F.I.O. *</div>
+        <input value={patientName} onChange={e=>setPatientName(e.target.value)} placeholder="Familiya Ism Otasining ismi" style={inputStyle}/>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
+        <div>
+          <div style={{fontSize:12,color:ts,marginBottom:5}}>Yosh *</div>
+          <input type="number" value={patientAge} onChange={e=>setPatientAge(e.target.value)} placeholder="Masalan: 45" min="1" max="120" style={inputStyle}/>
+        </div>
+        <div>
+          <div style={{fontSize:12,color:ts,marginBottom:5}}>Jins</div>
+          <select value={patientGender} onChange={e=>setPatientGender(e.target.value)} style={{...inputStyle,cursor:"pointer"}}>
+            <option>Ayol</option>
+            <option>Erkak</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <div style={{fontSize:12,color:ts,marginBottom:5}}>Qo'shimcha izoh</div>
+        <textarea value={patientNotes} onChange={e=>setPatientNotes(e.target.value)} placeholder="Shikoyatlar, anamnez..." rows={2}
+          style={{...inputStyle,resize:"vertical"}}/>
+      </div>
+    </Card>
+
     <div style={{fontSize:13,color:ts,marginBottom:12}}>{t.newAnal.type}</div>
     <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,marginBottom:20}}>
       {[["uzi","🌊"],["mammo","🔬"],["combined","🔗"]].map(([m,e])=>(
@@ -405,10 +439,24 @@ function NewAnalysis({initialModality="uzi",onBack}){
         </button>
       ))}
     </div>
-    <div style={{border:`2px dashed ${dark?"#2E3A47":"#DDE6ED"}`,borderRadius:14,padding:24,textAlign:"center",marginBottom:20,cursor:"pointer"}} >
-      <div style={{fontSize:28}}>📁</div>
-      <div style={{fontSize:13,color:ts,marginTop:6}}>{t.newAnal.uploadLabel}</div>
-      <div style={{fontSize:11,color:"#8FA4B2"}}>{t.newAnal.uploadSub}</div>
+    <div style={{border:`2px dashed ${dark?"#2E3A47":"#DDE6ED"}`,borderRadius:14,padding:24,textAlign:"center",marginBottom:20,cursor:"pointer",position:"relative"}}
+      onClick={()=>document.getElementById("file-upload-input").click()}>
+      <input id="file-upload-input" type="file" accept="image/*,.dcm" style={{display:"none"}}
+        onChange={e=>{
+          const file=e.target.files[0];
+          if(file){setUploadedFile(file);setAnalyzed(false);}
+        }}/>
+      {uploadedFile
+        ?<div>
+          <div style={{fontSize:28}}>✅</div>
+          <div style={{fontSize:13,color:"#2D9E6B",marginTop:6,fontWeight:600}}>{uploadedFile.name}</div>
+          <div style={{fontSize:11,color:"#8FA4B2"}}>{(uploadedFile.size/1024).toFixed(1)} KB</div>
+        </div>
+        :<div>
+          <div style={{fontSize:28}}>📁</div>
+          <div style={{fontSize:13,color:ts,marginTop:6}}>{t.newAnal.uploadLabel}</div>
+          <div style={{fontSize:11,color:"#8FA4B2"}}>{t.newAnal.uploadSub}</div>
+        </div>}
     </div>
     {(mod==="uzi"||mod==="combined")&&<Card style={{marginBottom:14}}>
       <div style={{fontSize:14,fontWeight:700,color:"#0B6E8A",marginBottom:14}}>🌊 {t.newAnal.uziFeatures}</div>
@@ -444,12 +492,39 @@ function NewAnalysis({initialModality="uzi",onBack}){
     </Card>}
     {analyzed&&<Card style={{marginBottom:14,background:bg,borderColor:color+"55"}}>
       <div style={{fontSize:12,color:ts,marginBottom:10}}>✨ {t.newAnal.resultLabel}</div>
+      {patientName&&<div style={{fontSize:13,fontWeight:600,color:tx,marginBottom:8}}>👤 {patientName}{patientAge?`, ${patientAge} yosh`:""}</div>}
       <Badge cat={cat}/>
       <div style={{fontSize:13,color:ts,marginTop:8}}>{bm.rec}</div>
       {ins&&<div style={{marginTop:10,padding:"8px 12px",background:"#EAF3DE",borderRadius:8,fontSize:12,color:"#2D9E6B",fontWeight:600}}>🎯 {t.newAnal.inSituNote}</div>}
       <div style={{marginTop:12}}><ConfBar value={0.88}/></div>
     </Card>}
-    <button onClick={async()=>{setLoading(true);await new Promise(r=>setTimeout(r,1600));setLoading(false);setAnalyzed(true);}}
+    {!patientName.trim()&&!analyzed&&<div style={{fontSize:12,color:"#E86B2A",textAlign:"center",marginBottom:8}}>⚠️ Bemor F.I.O. ni kiriting</div>}
+    <button onClick={async()=>{
+      if(!patientName.trim()){alert("Bemor F.I.O. ni kiriting!");return;}
+      setLoading(true);
+      await new Promise(r=>setTimeout(r,1600));
+      setLoading(false);
+      setAnalyzed(true);
+      const cat=calcBiRads();
+      addToHistory({
+        id: Date.now().toString(),
+        date: new Date().toISOString(),
+        patientName,
+        patientAge,
+        patientGender,
+        patientNotes,
+        modality: mod,
+        birads: cat,
+        confidence: 0.88,
+        sizeA: mod!=="mammo"?sizeA:null,
+        sizeB: mod!=="mammo"?sizeB:null,
+        isInSitu: mod!=="mammo"&&sizeA<=10&&sizeB<=10,
+        shape: mod!=="mammo"?shape:null,
+        echo: mod!=="mammo"?echo:null,
+        density: mod!=="uzi"?density:null,
+        calcification: mod!=="uzi"?calcification:null,
+      });
+    }}
       style={{width:"100%",padding:14,borderRadius:12,border:"none",background:loading?"#8FA4B2":"#0B6E8A",color:"#fff",fontWeight:700,fontSize:14,cursor:loading?"not-allowed":"pointer",transition:"background .2s"}}>
       {loading?t.newAnal.btnLoading:analyzed?t.newAnal.btnRetry:t.newAnal.btnStart}
     </button>
@@ -588,7 +663,7 @@ function Settings(){
   async function checkApi(){
     setApiStatus("checking");
     try {
-      const res = await fetch(`${apiUrl}/health`,{signal:AbortSignal.timeout(15000)});
+      const res = await fetch(`${apiUrl}/health`,{signal:AbortSignal.timeout(60000)});
       const data = await res.json();
       if(data.status==="ok"){setApiStatus("ok");toast2(s.connected,"success");}
       else{setApiStatus("error");toast2(s.toastBackend,"warn");}
@@ -730,6 +805,125 @@ function Settings(){
   </div>;
 }
 
+
+// ─── HISTORY SCREEN ───────────────────────────────────────────────────────────
+function HistoryScreen(){
+  const {t,dark,history,addToHistory}=useApp();
+  const [search,setSearch]=useState("");
+  const [selected,setSelected]=useState(null);
+  const tx=dark?"#E8EFF5":"#0D1B2A", ts=dark?"#8FA4B2":"#52687A";
+
+  const filtered=history.filter(h=>
+    !search||h.patientName.toLowerCase().includes(search.toLowerCase())
+  );
+
+  function fmtDate(iso){
+    const d=new Date(iso);
+    const m=["Yan","Fev","Mar","Apr","May","Iyn","Iyl","Avg","Sen","Okt","Noy","Dek"];
+    return `${d.getDate()} ${m[d.getMonth()]} ${d.getFullYear()}, ${d.getHours()}:${String(d.getMinutes()).padStart(2,"0")}`;
+  }
+
+  function clearHistory(){
+    if(window.confirm("Barcha tarixni o'chirishni tasdiqlaysizmi?")){
+      localStorage.removeItem("breastai_history");
+      window.location.reload();
+    }
+  }
+
+  if(selected){
+    const h=selected;
+    const color=bc(h.birads), bg2=bb(h.birads);
+    const bm=t.birads[h.birads]||t.birads[2];
+    return <div>
+      <button onClick={()=>setSelected(null)} style={{display:"flex",alignItems:"center",gap:6,background:"none",border:"none",cursor:"pointer",color:"#0B6E8A",fontSize:13,fontWeight:600,marginBottom:18,padding:0}}>← Orqaga</button>
+      <Card style={{marginBottom:14}}>
+        <div style={{display:"flex",alignItems:"center",gap:14}}>
+          <div style={{width:52,height:52,borderRadius:14,background:"#E6F1FB",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:18,color:"#0B6E8A",flexShrink:0}}>
+            {h.patientName.split(" ").map(w=>w[0]).slice(0,2).join("")}
+          </div>
+          <div>
+            <div style={{fontWeight:700,fontSize:16,color:tx}}>{h.patientName}</div>
+            <div style={{fontSize:13,color:ts}}>{h.patientAge&&`${h.patientAge} yosh · `}{h.patientGender}</div>
+            <div style={{fontSize:11,color:"#8FA4B2"}}>{fmtDate(h.date)}</div>
+          </div>
+        </div>
+      </Card>
+      <Card style={{marginBottom:14,background:bg2,borderColor:color+"44"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:10}}>
+          <div>
+            <div style={{fontSize:12,color:ts,marginBottom:8}}>AI tahlil natijasi · <ModalityTag m={h.modality}/></div>
+            <Badge cat={h.birads}/>
+            <div style={{fontSize:13,color:ts,marginTop:6}}>{bm.rec}</div>
+          </div>
+          <div style={{textAlign:"right"}}>
+            <div style={{fontSize:32,fontWeight:800,color,lineHeight:1}}>{Math.round(h.confidence*100)}%</div>
+            <div style={{fontSize:11,color:"#8FA4B2"}}>AI ishonch</div>
+          </div>
+        </div>
+        {h.isInSitu&&<div style={{marginTop:10,padding:"8px 12px",background:"#EAF3DE",borderRadius:8,fontSize:12,color:"#2D9E6B",fontWeight:600}}>🎯 In situ ehtimoli: {h.sizeA}×{h.sizeB}mm</div>}
+      </Card>
+      {(h.shape||h.echo)&&<Card style={{marginBottom:14}}>
+        <div style={{fontSize:14,fontWeight:700,color:"#0B6E8A",marginBottom:12}}>🌊 UZI topilmalari</div>
+        {h.sizeA&&<div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:`0.5px solid ${dark?"#2E3A47":"#EEF3F8"}`,fontSize:13}}><span style={{color:"#8FA4B2"}}>O'lcham</span><span style={{color:tx,fontWeight:500}}>{h.sizeA}×{h.sizeB} mm</span></div>}
+        {h.shape&&<div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:`0.5px solid ${dark?"#2E3A47":"#EEF3F8"}`,fontSize:13}}><span style={{color:"#8FA4B2"}}>Shakl</span><span style={{color:tx,fontWeight:500}}>{h.shape}</span></div>}
+        {h.echo&&<div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",fontSize:13}}><span style={{color:"#8FA4B2"}}>Echogenlik</span><span style={{color:tx,fontWeight:500}}>{h.echo}</span></div>}
+      </Card>}
+      {h.density&&<Card style={{marginBottom:14}}>
+        <div style={{fontSize:14,fontWeight:700,color:"#6A3DAA",marginBottom:12}}>🔬 Mammografiya</div>
+        <div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:`0.5px solid ${dark?"#2E3A47":"#EEF3F8"}`,fontSize:13}}><span style={{color:"#8FA4B2"}}>Zichlik</span><span style={{color:tx,fontWeight:500}}>BI-RADS {h.density}</span></div>
+        {h.calcification!==null&&<div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",fontSize:13}}><span style={{color:"#8FA4B2"}}>Mikrokalsifikat</span><span style={{color:h.calcification?"#D63B3B":tx,fontWeight:500}}>{h.calcification?"✓ Mavjud":"Yo'q"}</span></div>}
+      </Card>}
+      {h.patientNotes&&<Card style={{marginBottom:14}}>
+        <div style={{fontSize:14,fontWeight:700,color:tx,marginBottom:8}}>📝 Izoh</div>
+        <p style={{fontSize:13,color:ts,lineHeight:1.5,margin:0}}>{h.patientNotes}</p>
+      </Card>}
+    </div>;
+  }
+
+  return <div>
+    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16,flexWrap:"wrap",gap:10}}>
+      <div style={{fontSize:22,fontWeight:800,color:tx,letterSpacing:"-0.5px"}}>📋 Tahlil tarixi</div>
+      <div style={{display:"flex",gap:8,alignItems:"center"}}>
+        <span style={{fontSize:12,fontWeight:600,color:"#0B6E8A",background:"#E6F1FB",padding:"4px 12px",borderRadius:20}}>{history.length} ta</span>
+        {history.length>0&&<button onClick={clearHistory} style={{padding:"5px 12px",borderRadius:8,border:"1px solid #FCEBEB",background:"#FCEBEB",color:"#D63B3B",fontSize:12,fontWeight:600,cursor:"pointer"}}>🗑 Tozalash</button>}
+      </div>
+    </div>
+    <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Bemor ismi bo'yicha..."
+      style={{width:"100%",padding:"10px 14px",borderRadius:12,border:`1px solid ${dark?"#2E3A47":"#DDE6ED"}`,background:dark?"#1E2733":"#fff",fontSize:14,color:tx,marginBottom:14,boxSizing:"border-box",outline:"none"}}/>
+    {filtered.length===0
+      ?<div style={{textAlign:"center",padding:"60px 0",color:"#8FA4B2"}}>
+        <div style={{fontSize:40,marginBottom:12}}>📭</div>
+        <div style={{fontSize:15}}>{history.length===0?"Hali tahlil qilinmagan":"Topilmadi"}</div>
+        <div style={{fontSize:13,marginTop:4}}>Yangi tahlil qo'shing</div>
+      </div>
+      :<div style={{display:"flex",flexDirection:"column",gap:10}}>
+        {filtered.map(h=>(
+          <Card key={h.id} style={{cursor:"pointer",borderColor:h.birads>=4?bc(h.birads)+"44":dark?"#2E3A47":"#DDE6ED"}} onClick={()=>setSelected(h)}>
+            <div style={{display:"flex",alignItems:"flex-start",gap:12}}>
+              <div style={{width:44,height:44,borderRadius:12,background:"#E6F1FB",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,fontSize:14,color:"#0B6E8A",flexShrink:0}}>
+                {h.patientName.split(" ").map(w=>w[0]).slice(0,2).join("")}
+              </div>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:4}}>
+                  <span style={{fontWeight:600,fontSize:14,color:tx}}>{h.patientName}</span>
+                  <Badge cat={h.birads}/>
+                  {h.isInSitu&&<span style={{fontSize:10,fontWeight:700,color:"#2D9E6B",background:"#EAF3DE",padding:"2px 7px",borderRadius:5}}>in situ</span>}
+                </div>
+                <div style={{display:"flex",gap:8,alignItems:"center",flexWrap:"wrap"}}>
+                  {h.patientAge&&<span style={{fontSize:12,color:ts}}>{h.patientAge} yosh</span>}
+                  <ModalityTag m={h.modality}/>
+                  <span style={{fontSize:11,color:"#8FA4B2",marginLeft:"auto"}}>{fmtDate(h.date)}</span>
+                </div>
+                <div style={{marginTop:8}}><ConfBar value={h.confidence}/></div>
+              </div>
+              <span style={{color:"#8FA4B2",fontSize:18,alignSelf:"center"}}>›</span>
+            </div>
+          </Card>
+        ))}
+      </div>}
+  </div>;
+}
+
 // ─── APP ──────────────────────────────────────────────────────────────────────
 export default function App(){
   const [lang,setLang]=useState("uz");
@@ -738,11 +932,20 @@ export default function App(){
   const [tab,setTab]=useState("dashboard");
   const [selectedPatient,setSelectedPatient]=useState(null);
   const [newAnalysisMod,setNewAnalysisMod]=useState(null);
+  const [history,setHistory]=useState(()=>{
+    try{ return JSON.parse(localStorage.getItem("breastai_history")||"[]"); }
+    catch{ return []; }
+  });
+  function addToHistory(record){
+    const updated=[record,...history].slice(0,100);
+    setHistory(updated);
+    try{ localStorage.setItem("breastai_history",JSON.stringify(updated)); }catch{}
+  }
   const t=T[lang]||T.uz;
   const bg=dark?"#121920":"#EEF3F8", hbg=dark?"#1A232E":"#fff", hborder=dark?"#2E3A47":"#DDE6ED", tx=dark?"#E8EFF5":"#0D1B2A";
 
-  const TABS=["dashboard","patients","stats","settings"];
-  const ICONS=["📊","👥","📈","⚙️"];
+  const TABS=["dashboard","patients","history","stats","settings"];
+  const ICONS=["📊","👥","📋","📈","⚙️"];
 
   function goTab(id){setTab(id);setSelectedPatient(null);setNewAnalysisMod(null);}
 
@@ -751,12 +954,13 @@ export default function App(){
     if(newAnalysisMod!==null) return <NewAnalysis initialModality={newAnalysisMod} onBack={()=>setNewAnalysisMod(null)}/>;
     if(tab==="dashboard") return <Dashboard onNewAnalysis={mod=>{setNewAnalysisMod(mod);}} onPatient={p=>{setSelectedPatient(p);}}/>;
     if(tab==="patients") return <PatientsList onPatient={p=>{setSelectedPatient(p);}}/>;
+    if(tab==="history") return <HistoryScreen/>;
     if(tab==="stats") return <Statistics/>;
     if(tab==="settings") return <Settings/>;
   }
 
   return (
-    <AppCtx.Provider value={{lang,t,setLang,dark,setDark,apiUrl,setApiUrl}}>
+    <AppCtx.Provider value={{lang,t,setLang,dark,setDark,apiUrl,setApiUrl,history,addToHistory}}>
       <div style={{fontFamily:"system-ui,-apple-system,sans-serif",background:bg,minHeight:"100vh",display:"flex",flexDirection:"column",transition:"background .3s"}}>
         <div style={{background:hbg,borderBottom:`1px solid ${hborder}`,padding:"13px 18px",display:"flex",alignItems:"center",gap:10,position:"sticky",top:0,zIndex:100,transition:"background .3s"}}>
           <div style={{width:32,height:32,borderRadius:10,background:"#0B6E8A",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:13,color:"#fff"}}>B</div>
