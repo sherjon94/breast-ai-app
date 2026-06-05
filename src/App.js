@@ -45,7 +45,7 @@ const T = {
 };
 
 // ─── CONTEXT ──────────────────────────────────────────────────────────────────
-const AppCtx = createContext({ lang:"uz", t:T.uz, setLang:()=>{}, dark:false, setDark:()=>{} });
+const AppCtx = createContext({ lang:"uz", t:T.uz, setLang:()=>{}, dark:false, setDark:()=>{}, apiUrl:"https://breast-ai-backend.onrender.com", setApiUrl:()=>{} });
 function useApp(){ return useContext(AppCtx); }
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
@@ -572,7 +572,7 @@ function Settings(){
   const s=t.settings;
   const [notif,setNotif]=useState(true);
   const [auto,setAuto]=useState(false);
-  const [apiUrl,setApiUrl]=useState("https://breast-ai-backend.onrender.com");
+  
   const [editApi,setEditApi]=useState(false);
   const [toast,setToast]=useState(null);
   const [doctorName,setDoctorName]=useState("Dr.Rashidova Mahliyo");
@@ -729,6 +729,7 @@ function Settings(){
 export default function App(){
   const [lang,setLang]=useState("uz");
   const [dark,setDark]=useState(false);
+  const [apiUrl,setApiUrl]=useState("https://breast-ai-backend.onrender.com");
   const [tab,setTab]=useState("dashboard");
   const [selectedPatient,setSelectedPatient]=useState(null);
   const [newAnalysisMod,setNewAnalysisMod]=useState(null);
@@ -750,7 +751,7 @@ export default function App(){
   }
 
   return (
-    <AppCtx.Provider value={{lang,t,setLang,dark,setDark}}>
+    <AppCtx.Provider value={{lang,t,setLang,dark,setDark,apiUrl,setApiUrl}}>
       <div style={{fontFamily:"system-ui,-apple-system,sans-serif",background:bg,minHeight:"100vh",display:"flex",flexDirection:"column",transition:"background .3s"}}>
         <div style={{background:hbg,borderBottom:`1px solid ${hborder}`,padding:"13px 18px",display:"flex",alignItems:"center",gap:10,position:"sticky",top:0,zIndex:100,transition:"background .3s"}}>
           <div style={{width:32,height:32,borderRadius:10,background:"#0B6E8A",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:13,color:"#fff"}}>B</div>
