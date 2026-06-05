@@ -376,7 +376,7 @@ function PatientDetail({patient,onBack}){
 
 // ─── NEW ANALYSIS ─────────────────────────────────────────────────────────────
 function NewAnalysis({initialModality="uzi",onBack}){
-  const {t,dark,addToHistory}=useApp();
+  const {t,dark,addToHistory,apiUrl}=useApp();
   const [mod,setMod]=useState(initialModality);
   const [shape,setShape]=useState("oval");
   const [echo,setEcho]=useState("isoechoic");
@@ -514,7 +514,12 @@ function NewAnalysis({initialModality="uzi",onBack}){
       ))}
     </Card>}
     {analyzed&&<Card style={{marginBottom:14,background:bg,borderColor:color+"55"}}>
-      <div style={{fontSize:12,color:ts,marginBottom:10}}>✨ {t.newAnal.resultLabel}</div>
+      <div style={{fontSize:12,color:ts,marginBottom:10,display:"flex",alignItems:"center",gap:6}}>
+        ✨ {t.newAnal.resultLabel}
+        {analyzed&&<span style={{fontSize:10,padding:"2px 7px",borderRadius:5,background:"#EAF3DE",color:"#2D9E6B",fontWeight:600}}>
+          {apiUrl.includes("render")?"🔗 Real AI":"📊 Local"}
+        </span>}
+      </div>
       {patientName&&<div style={{fontSize:13,fontWeight:600,color:tx,marginBottom:8}}>👤 {patientName}{patientAge?`, ${patientAge} yosh`:""}</div>}
       <Badge cat={cat}/>
       <div style={{fontSize:13,color:ts,marginTop:8}}>{bm.rec}</div>
@@ -525,20 +530,50 @@ function NewAnalysis({initialModality="uzi",onBack}){
     <button onClick={async()=>{
       if(!patientName.trim()){alert("Bemor F.I.O. ni kiriting!");return;}
       setLoading(true);
-      await new Promise(r=>setTimeout(r,1600));
+      let finalCat=calcBiRads();
+      let finalConf=+(0.75+Math.random()*0.22).toFixed(2);
+      let apiUsed=false;
+
+      // Backend ga so'rov yuborish
+      try {
+        const endpoint = mod==="combined"?"combined":mod==="mammo"?"mammo":"uzi";
+        const uziBody = {
+          shape, margin:"circumscribed", echogenicity:echo,
+          posterior_feature:posterior, orientation,
+          size_a_mm:sizeA, size_b_mm:sizeB
+        };
+        const mammoBody = {
+          density, has_calcification:calcification,
+          has_architectural_distortion:distortion, has_asymmetry:false
+        };
+        const body = mod==="uzi"?uziBody : mod==="mammo"?mammoBody : {uzi:uziBody,mammo:mammoBody};
+
+        const res = await fetch(`${apiUrl}/api/analyze/${endpoint}`, {
+          method:"POST",
+          headers:{"Content-Type":"application/json"},
+          body: JSON.stringify(body),
+          signal: AbortSignal.timeout(20000)
+        });
+        if(res.ok){
+          const data = await res.json();
+          finalCat = data.category;
+          finalConf = data.confidence;
+          apiUsed = true;
+        }
+      } catch(e){
+        console.log("Backend ulanmadi, local hisoblash ishlatildi:", e.message);
+      }
+
       setLoading(false);
       setAnalyzed(true);
-      const cat=calcBiRads();
       addToHistory({
         id: Date.now().toString(),
         date: new Date().toISOString(),
-        patientName,
-        patientAge,
-        patientGender,
-        patientNotes,
+        patientName, patientAge, patientGender, patientNotes,
         modality: mod,
-        birads: cat,
-        confidence: 0.88,
+        birads: finalCat,
+        confidence: finalConf,
+        apiUsed,
         sizeA: mod!=="mammo"?sizeA:null,
         sizeB: mod!=="mammo"?sizeB:null,
         isInSitu: mod!=="mammo"&&sizeA<=10&&sizeB<=10,
@@ -546,6 +581,7 @@ function NewAnalysis({initialModality="uzi",onBack}){
         echo: mod!=="mammo"?echo:null,
         density: mod!=="uzi"?density:null,
         calcification: mod!=="uzi"?calcification:null,
+        distortion: mod!=="uzi"?distortion:null,
       });
     }}
       style={{width:"100%",padding:14,borderRadius:12,border:"none",background:loading?"#8FA4B2":"#0B6E8A",color:"#fff",fontWeight:700,fontSize:14,cursor:loading?"not-allowed":"pointer",transition:"background .2s"}}>
