@@ -222,8 +222,8 @@ function Dashboard({onNewAnalysis,onPatient}){
       </Card>
       :<div style={{display:"flex",flexDirection:"column",gap:10}}>
         {allRecords.slice(0,5).map(h=>{
-          const fmtDate=(iso)=>{const m=["Yan","Fev","Mar","Apr","May","Iyn","Iyl","Avg","Sen","Okt","Noy","Dek"],d=new Date(iso);return `${d.getDate()} ${m[d.getMonth()]}`;};
-          return <Card key={h.id} style={{cursor:"pointer",borderColor:h.birads>=4?bc(h.birads)+"55":dark?"#2E3A47":"#DDE6ED"}}>
+          const fmtD2=(iso)=>{const m=["Yan","Fev","Mar","Apr","May","Iyn","Iyl","Avg","Sen","Okt","Noy","Dek"],d=new Date(iso);return `${d.getDate()} ${m[d.getMonth()]}`;};
+          return <Card key={h.id} style={{cursor:"pointer",borderColor:h.birads>=4?bc(h.birads)+"55":dark?"#2E3A47":"#DDE6ED"}} onClick={()=>onPatient(h)}>
             <div style={{display:"flex",alignItems:"flex-start",gap:12}}>
               <div style={{width:44,height:44,borderRadius:12,background:"#E6F1FB",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,fontSize:14,color:"#0B6E8A",flexShrink:0}}>
                 {h.patientName.split(" ").map(w=>w[0]).slice(0,2).join("")}
@@ -237,10 +237,11 @@ function Dashboard({onNewAnalysis,onPatient}){
                 <div style={{display:"flex",gap:8,alignItems:"center",marginBottom:8,flexWrap:"wrap"}}>
                   {h.patientAge&&<span style={{fontSize:12,color:ts}}>{h.patientAge} {t.age}</span>}
                   <ModalityTag m={h.modality}/>
-                  <span style={{fontSize:11,color:"#8FA4B2",marginLeft:"auto"}}>{fmtDate(h.date)}</span>
+                  <span style={{fontSize:11,color:"#8FA4B2",marginLeft:"auto"}}>{fmtD2(h.date)}</span>
                 </div>
                 <ConfBar value={h.confidence}/>
               </div>
+              <span style={{color:"#8FA4B2",fontSize:18,alignSelf:"center"}}>›</span>
             </div>
           </Card>;
         })}
@@ -250,14 +251,21 @@ function Dashboard({onNewAnalysis,onPatient}){
 
 // ─── PATIENTS LIST ────────────────────────────────────────────────────────────
 function PatientsList({onPatient}){
-  const {t,dark}=useApp();
+  const {t,dark,history}=useApp();
   const [search,setSearch]=useState("");
   const [filterBR,setFilterBR]=useState(null);
   const [sort,setSort]=useState("date");
-  const tx=dark?"#E8EFF5":"#0D1B2A";
-  const filtered=PATIENTS
-    .filter(p=>(!search||p.name.toLowerCase().includes(search.toLowerCase()))&&(!filterBR||p.analyses[0].birads===filterBR))
-    .sort((a,b)=>sort==="birads"?b.analyses[0].birads-a.analyses[0].birads:sort==="name"?a.name.localeCompare(b.name):new Date(b.createdAt)-new Date(a.createdAt));
+  const tx=dark?"#E8EFF5":"#0D1B2A", ts=dark?"#8FA4B2":"#52687A";
+
+  function fmtDate(iso){
+    const m=["Yan","Fev","Mar","Apr","May","Iyn","Iyl","Avg","Sen","Okt","Noy","Dek"],d=new Date(iso);
+    return `${d.getDate()} ${m[d.getMonth()]}`;
+  }
+
+  const filtered=(history||[])
+    .filter(h=>(!search||h.patientName.toLowerCase().includes(search.toLowerCase()))&&(!filterBR||h.birads===filterBR))
+    .sort((a,b)=>sort==="birads"?b.birads-a.birads:sort==="name"?a.patientName.localeCompare(b.patientName):new Date(b.date)-new Date(a.date));
+
   return <div>
     <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:18}}>
       <div style={{fontSize:24,fontWeight:800,color:tx,letterSpacing:"-0.5px"}}>{t.patients.title}</div>
@@ -276,33 +284,38 @@ function PatientsList({onPatient}){
       {(filterBR||search)&&<button onClick={()=>{setFilterBR(null);setSearch("");}} style={{padding:"5px 12px",borderRadius:8,fontSize:11,cursor:"pointer",border:`1px solid ${dark?"#2E3A47":"#DDE6ED"}`,background:dark?"#1E2733":"#fff",color:dark?"#8FA4B2":"#52687A"}}>{t.patients.clear}</button>}
     </div>
     {filtered.length===0
-      ?<div style={{textAlign:"center",padding:"48px 0",color:"#8FA4B2"}}><div style={{fontSize:36,marginBottom:10}}>🔍</div><div style={{fontSize:14}}>{t.patients.notFound}</div><div style={{fontSize:12,marginTop:4}}>{t.patients.changeFilter}</div></div>
+      ?<div style={{textAlign:"center",padding:"48px 0",color:"#8FA4B2"}}>
+        <div style={{fontSize:36,marginBottom:10}}>{(history||[]).length===0?"📭":"🔍"}</div>
+        <div style={{fontSize:14}}>{(history||[]).length===0?"Hali tahlil qilinmagan":t.patients.notFound}</div>
+        <div style={{fontSize:12,marginTop:4}}>{(history||[]).length===0?"Yangi tahlil qo'shing":t.patients.changeFilter}</div>
+      </div>
       :<div style={{display:"flex",flexDirection:"column",gap:10}}>
-        {filtered.map(p=>{
-          const a=p.analyses[0];
-          return <Card key={p.id} style={{cursor:"pointer",borderColor:a.birads>=4?bc(a.birads)+"44":dark?"#2E3A47":"#DDE6ED"}} onClick={()=>onPatient(p)}>
+        {filtered.map(h=>(
+          <Card key={h.id} style={{cursor:"pointer",borderColor:h.birads>=4?bc(h.birads)+"44":dark?"#2E3A47":"#DDE6ED"}} onClick={()=>onPatient(h)}>
             <div style={{display:"flex",alignItems:"flex-start",gap:12}}>
               <div style={{position:"relative",flexShrink:0}}>
-                <div style={{width:46,height:46,borderRadius:13,background:"#E6F1FB",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,fontSize:15,color:"#0B6E8A"}}>{ini(p.name)}</div>
-                {a.birads>=4&&<div style={{position:"absolute",top:-2,right:-2,width:12,height:12,borderRadius:"50%",background:bc(a.birads),border:"2px solid #fff"}}/>}
+                <div style={{width:46,height:46,borderRadius:13,background:"#E6F1FB",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,fontSize:15,color:"#0B6E8A"}}>
+                  {h.patientName.split(" ").map(w=>w[0]).slice(0,2).join("")}
+                </div>
+                {h.birads>=4&&<div style={{position:"absolute",top:-2,right:-2,width:12,height:12,borderRadius:"50%",background:bc(h.birads),border:"2px solid #fff"}}/>}
               </div>
               <div style={{flex:1,minWidth:0}}>
                 <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:4}}>
-                  <span style={{fontWeight:600,fontSize:14,color:tx}}>{p.name}</span>
-                  <Badge cat={a.birads}/>
-                  {inSitu(a.uzi)&&<span style={{fontSize:10,fontWeight:700,color:"#2D9E6B",background:"#EAF3DE",padding:"2px 7px",borderRadius:5}}>{t.inSituBadge}</span>}
+                  <span style={{fontWeight:600,fontSize:14,color:tx}}>{h.patientName}</span>
+                  <Badge cat={h.birads}/>
+                  {h.isInSitu&&<span style={{fontSize:10,fontWeight:700,color:"#2D9E6B",background:"#EAF3DE",padding:"2px 7px",borderRadius:5}}>{t.inSituBadge}</span>}
                 </div>
                 <div style={{display:"flex",gap:8,alignItems:"center",marginBottom:8,flexWrap:"wrap"}}>
-                  <span style={{fontSize:12,color:"#52687A"}}>{p.age} {t.age}</span>
-                  <ModalityTag m={a.modality}/>
-                  <span style={{fontSize:11,color:"#8FA4B2",marginLeft:"auto"}}>{fmtD(a.date)}</span>
+                  {h.patientAge&&<span style={{fontSize:12,color:ts}}>{h.patientAge} {t.age}</span>}
+                  <ModalityTag m={h.modality}/>
+                  <span style={{fontSize:11,color:"#8FA4B2",marginLeft:"auto"}}>{fmtDate(h.date)}</span>
                 </div>
-                <ConfBar value={a.confidence}/>
+                <ConfBar value={h.confidence}/>
               </div>
               <span style={{color:"#8FA4B2",fontSize:20,alignSelf:"center",marginLeft:4}}>›</span>
             </div>
-          </Card>;
-        })}
+          </Card>
+        ))}
       </div>}
   </div>;
 }
@@ -817,10 +830,10 @@ function Settings(){
 
 
 // ─── HISTORY SCREEN ───────────────────────────────────────────────────────────
-function HistoryScreen(){
+function HistoryScreen({forcedRecord=null,onBack=null}){
   const {t,dark,history,addToHistory}=useApp();
   const [search,setSearch]=useState("");
-  const [selected,setSelected]=useState(null);
+  const [selected,setSelected]=useState(forcedRecord);
   const tx=dark?"#E8EFF5":"#0D1B2A", ts=dark?"#8FA4B2":"#52687A";
 
   const filtered=history.filter(h=>
@@ -845,7 +858,7 @@ function HistoryScreen(){
     const color=bc(h.birads), bg2=bb(h.birads);
     const bm=t.birads[h.birads]||t.birads[2];
     return <div>
-      <button onClick={()=>setSelected(null)} style={{display:"flex",alignItems:"center",gap:6,background:"none",border:"none",cursor:"pointer",color:"#0B6E8A",fontSize:13,fontWeight:600,marginBottom:18,padding:0}}>← Orqaga</button>
+      <button onClick={()=>{setSelected(null);if(onBack)onBack();}} style={{display:"flex",alignItems:"center",gap:6,background:"none",border:"none",cursor:"pointer",color:"#0B6E8A",fontSize:13,fontWeight:600,marginBottom:18,padding:0}}>← Orqaga</button>
       <Card style={{marginBottom:14}}>
         <div style={{display:"flex",alignItems:"center",gap:14}}>
           <div style={{width:52,height:52,borderRadius:14,background:"#E6F1FB",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:18,color:"#0B6E8A",flexShrink:0}}>
@@ -960,7 +973,7 @@ export default function App(){
   function goTab(id){setTab(id);setSelectedPatient(null);setNewAnalysisMod(null);}
 
   function renderContent(){
-    if(selectedPatient) return <PatientDetail patient={selectedPatient} onBack={()=>setSelectedPatient(null)}/>;
+    if(selectedPatient) return <HistoryScreen forcedRecord={selectedPatient} onBack={()=>setSelectedPatient(null)}/>;
     if(newAnalysisMod!==null) return <NewAnalysis initialModality={newAnalysisMod} onBack={()=>setNewAnalysisMod(null)}/>;
     if(tab==="dashboard") return <Dashboard onNewAnalysis={mod=>{setNewAnalysisMod(mod);}} onPatient={p=>{setSelectedPatient(p);}}/>;
     if(tab==="patients") return <PatientsList onPatient={p=>{setSelectedPatient(p);}}/>;
