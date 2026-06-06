@@ -884,7 +884,7 @@ function Statistics(){
       <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}><span style={{fontSize:16}}>🎯</span><div style={{fontSize:14,fontWeight:700,color:"#0D1B2A"}}>{t.stats.inSituTitle}</div></div>
       <div style={{fontSize:36,fontWeight:800,color:"#2D9E6B",letterSpacing:"-1px",marginBottom:6}}>{inSituCount}</div>
       <div style={{height:8,borderRadius:8,background:"#C0DD97",overflow:"hidden",marginBottom:8}}>
-        <div style={{width:`${inSituCount/PATIENTS.length*100}%`,height:"100%",background:"#2D9E6B",borderRadius:8}}/>
+        <div style={{width:`${all.length>0?inSituCount/all.length*100:0}%`,height:"100%",background:"#2D9E6B",borderRadius:8}}/>
       </div>
       <div style={{fontSize:12,color:"#3B6D11"}}>{all.length>0?Math.round(inSituCount/all.length*100):0}% {t.stats.inSituDesc}</div>
       <div style={{fontSize:12,color:"#3B6D11",marginTop:4}}>{t.stats.inSituEffect}</div>
@@ -925,23 +925,31 @@ function Settings(){
   }
 
   function downloadBackup(){
-    const data=JSON.stringify({patients:PATIENTS,exportedAt:new Date().toISOString(),version:"1.0.0"},null,2);
+    const hist = JSON.parse(localStorage.getItem("breastai_history")||"[]");
+    const data=JSON.stringify({patients:hist,exportedAt:new Date().toISOString(),version:"1.0.0",doctor:doctorName,department:doctorDept},null,2);
     dataDownload(data,"breast_ai_backup.json");
     toast2(s.toastBackup,"success");
     setModal(null);
   }
 
   function generatePDF(){
+    const hist = JSON.parse(localStorage.getItem("breastai_history")||"[]");
     const lines=[
       "BREAST AI - TIBBIY HISOBOT",
       "===========================",
       `Sana: ${new Date().toLocaleDateString("uz-UZ")}`,
       `Doktor: ${doctorName} | ${doctorDept}`,
+      `Jami bemorlar: ${hist.length} ta`,
       "",
-      ...PATIENTS.map(p=>{
-        const a=p.analyses[0];
-        return [`Bemor: ${p.name} | ${p.age} yosh`,`  BI-RADS: ${a.birads} | Ishonch: ${Math.round(a.confidence*100)}%`,`  Tavsiya: ${t.birads[a.birads]?.rec||""}`,`  Izoh: ${a.notes}`,""].join("\n");
-      }),
+      ...hist.map(h=>[
+        `Bemor: ${h.patientName} | ${h.patientAge||"??"} yosh | ${h.patientGender||""}`,
+        `  Tahlil: ${h.modality==="uzi"?"UZI":h.modality==="mammo"?"Mammografiya":"Kombinatsiya"}`,
+        `  BI-RADS: ${h.birads} | Ishonch: ${Math.round(h.confidence*100)}%`,
+        `  Sana: ${h.date?.split("T")[0]||""}`,
+        h.isInSitu?"  ⚡ In situ ehtimoli!":"",
+        h.patientNotes?`  Izoh: ${h.patientNotes}`:"",
+        "",
+      ].filter(Boolean).join("\n")),
     ].join("\n");
     dataDownload(lines,"breast_ai_tibbiy_hisobot.txt");
     toast2(s.toastPdf,"success");
@@ -958,16 +966,19 @@ function Settings(){
 
     {modal==="pdf"&&<Modal title={s.pdfModalTitle} onClose={()=>setModal(null)}>
       <p style={{fontSize:13,color:"#52687A",marginBottom:16,lineHeight:1.5}}>{s.pdfModalDesc}</p>
-      <div style={{background:"#EEF3F8",borderRadius:12,padding:14,marginBottom:16,fontSize:12,color:"#52687A"}}>
-        📋 {PATIENTS.length} ta bemor · {PATIENTS.filter(p=>p.analyses[0].birads>=4).length} ta shoshilinch · {PATIENTS.filter(p=>inSitu(p.analyses[0].uzi)).length} ta in situ
-      </div>
+      {(()=>{
+        const hist=JSON.parse(localStorage.getItem("breastai_history")||"[]");
+        return <div style={{background:"#EEF3F8",borderRadius:12,padding:14,marginBottom:16,fontSize:12,color:"#52687A"}}>
+          📋 {hist.length} ta bemor · {hist.filter(h=>h.birads>=4).length} ta shoshilinch · {hist.filter(h=>h.isInSitu).length} ta in situ
+        </div>;
+      })()}
       <button onClick={generatePDF} style={{width:"100%",padding:13,borderRadius:12,border:"none",background:"#6A3DAA",color:"#fff",fontWeight:700,fontSize:14,cursor:"pointer"}}>{s.pdfGenerate} ⬇️</button>
     </Modal>}
 
     {modal==="backup"&&<Modal title={s.backupModalTitle} onClose={()=>setModal(null)}>
       <p style={{fontSize:13,color:"#52687A",marginBottom:16,lineHeight:1.5}}>{s.backupModalDesc}</p>
       <div style={{background:"#EEF3F8",borderRadius:12,padding:14,marginBottom:16,fontSize:12,color:"#52687A",fontFamily:"monospace"}}>
-        {`{ "patients": ${PATIENTS.length}, "date": "${new Date().toISOString().split("T")[0]}", "version": "1.0.0" }`}
+        {`{ "patients": ${JSON.parse(localStorage.getItem("breastai_history")||"[]").length}, "date": "${new Date().toISOString().split("T")[0]}", "version": "1.0.0" }`}
       </div>
       <button onClick={downloadBackup} style={{width:"100%",padding:13,borderRadius:12,border:"none",background:"#0B6E8A",color:"#fff",fontWeight:700,fontSize:14,cursor:"pointer"}}>{s.backupDownload} ⬇️</button>
     </Modal>}
