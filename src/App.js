@@ -576,19 +576,46 @@ function NewAnalysis({initialModality="uzi",onBack}){
         };
         const body = mod==="uzi"?uziBody : mod==="mammo"?mammoBody : {uzi:uziBody,mammo:mammoBody};
 
-        // Faqat xususiyatlar asosida rule-based tahlil
-        const res = await fetch(`${apiUrl}/api/analyze/${endpoint}`, {
-          method:"POST",
-          headers:{"Content-Type":"application/json"},
-          body: JSON.stringify(body),
-          signal: AbortSignal.timeout(20000)
-        });
-        if(res.ok){
-          const data = await res.json();
-          finalCat = data.category;
-          finalConf = data.confidence;
-          apiUsed = true;
-          setApiResult(data);
+        if(uploadedFile){
+          // Rasm yuklangan — AI model bilan tekshirish
+          const formData = new FormData();
+          formData.append("file", uploadedFile);
+          const imgRes = await fetch(`${apiUrl}/api/analyze/image`,{
+            method:"POST", body:formData, signal:AbortSignal.timeout(40000)
+          });
+          if(imgRes.ok){
+            const imgData = await imgRes.json();
+            // AI model natijasi: 0=benign, 1=malignant
+            const malignantProb = imgData.class_probabilities?.malignant || 0;
+            const benignProb = imgData.class_probabilities?.benign || 0;
+            if(malignantProb > 0.6) finalCat = 4;
+            else if(malignantProb > 0.4) finalCat = 3;
+            else finalCat = 2;
+            finalConf = Math.max(malignantProb, benignProb);
+            apiUsed = true;
+            setApiResult(imgData);
+          } else {
+            const err = await imgRes.json().catch(()=>({}));
+            const msg = err?.detail?.message || err?.detail || "Noto\'g\'ri rasm! UZI yoki mammografiya rasmi yuklang.";
+            setUploadError(msg);
+            setLoading(false);
+            return;
+          }
+        } else {
+          // Rasm yo'q — xususiyatlar asosida rule-based tahlil
+          const res = await fetch(`${apiUrl}/api/analyze/${endpoint}`,{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify(body),
+            signal:AbortSignal.timeout(20000)
+          });
+          if(res.ok){
+            const data = await res.json();
+            finalCat = data.category;
+            finalConf = data.confidence;
+            apiUsed = true;
+            setApiResult(data);
+          }
         }
       } catch(e){
         console.log("Backend ulanmadi, local hisoblash ishlatildi:", e.message);
