@@ -391,6 +391,7 @@ function NewAnalysis({initialModality="uzi",onBack}){
   const [loading,setLoading]=useState(false);
   const [uploadedFile,setUploadedFile]=useState(null);
   const [uploadError,setUploadError]=useState(null);
+  const [apiResult,setApiResult]=useState(null);
   const [patientName,setPatientName]=useState("");
   const [patientAge,setPatientAge]=useState("");
   const [patientGender,setPatientGender]=useState("Ayol");
@@ -457,7 +458,7 @@ function NewAnalysis({initialModality="uzi",onBack}){
     <div style={{fontSize:13,color:ts,marginBottom:12}}>{t.newAnal.type}</div>
     <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,marginBottom:20}}>
       {[["uzi","🌊"],["mammo","🔬"],["combined","🔗"]].map(([m,e])=>(
-        <button key={m} onClick={()=>{setMod(m);setAnalyzed(false);}} style={{padding:"12px 6px",borderRadius:12,border:mod===m?`2px solid ${mc(m)}`:`1px solid ${dark?"#2E3A47":"#DDE6ED"}`,background:mod===m?`${mc(m)}0F`:dark?"#1E2733":"#fff",cursor:"pointer"}}>
+        <button key={m} onClick={()=>{setMod(m);setAnalyzed(false);setApiResult(null);}} style={{padding:"12px 6px",borderRadius:12,border:mod===m?`2px solid ${mc(m)}`:`1px solid ${dark?"#2E3A47":"#DDE6ED"}`,background:mod===m?`${mc(m)}0F`:dark?"#1E2733":"#fff",cursor:"pointer"}}>
           <div style={{fontSize:20}}>{e}</div>
           <div style={{fontSize:11,fontWeight:600,color:mod===m?mc(m):dark?"#8FA4B2":"#52687A",marginTop:4}}>{t.modality[m]}</div>
         </button>
@@ -545,9 +546,10 @@ function NewAnalysis({initialModality="uzi",onBack}){
     {analyzed&&<Card style={{marginBottom:14,background:bg,borderColor:color+"55"}}>
       <div style={{fontSize:12,color:ts,marginBottom:10,display:"flex",alignItems:"center",gap:6}}>
         ✨ {t.newAnal.resultLabel}
-        {analyzed&&<span style={{fontSize:10,padding:"2px 7px",borderRadius:5,background:"#EAF3DE",color:"#2D9E6B",fontWeight:600}}>
-          {apiUrl.includes("render")?"🔗 Real AI":"📊 Local"}
-        </span>}
+        {analyzed&&apiResult
+          ?<span style={{fontSize:10,padding:"2px 7px",borderRadius:5,background:"#EAF3DE",color:"#2D9E6B",fontWeight:600}}>🔗 Real AI</span>
+          :<span style={{fontSize:10,padding:"2px 7px",borderRadius:5,background:"#F0F0F0",color:"#8FA4B2",fontWeight:600}}>📊 Local</span>
+        }
       </div>
       {patientName&&<div style={{fontSize:13,fontWeight:600,color:tx,marginBottom:8}}>👤 {patientName}{patientAge?`, ${patientAge} yosh`:""}</div>}
       <Badge cat={cat}/>
@@ -610,6 +612,7 @@ function NewAnalysis({initialModality="uzi",onBack}){
             finalCat = data.category;
             finalConf = data.confidence;
             apiUsed = true;
+            setApiResult(data);
           }
         }
       } catch(e){
