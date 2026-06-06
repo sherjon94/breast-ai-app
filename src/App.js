@@ -245,14 +245,14 @@ function generatePDFReport(record, doctorName, doctorDept){
   <div style="margin-top:12px;font-size:11px;color:#52687A">AI ishonch darajasi</div>
   <div class="risk-bar"><div class="risk-fill"></div></div>
   <div style="font-size:13px;font-weight:600;color:${color}">${Math.round(record.confidence*100)}%</div>
-  ${record.isInSitu?`<div style="margin-top:8px;background:#EAF3DE;border-radius:6px;padding:6px;font-size:11px;color:#2D9E6B">🎯 In situ ehtimoli: o'lcham ≤10mm</div>`:""}
+  ${record.isInSitu?`<div style="margin-top:8px;background:#EAF3DE;border-radius:6px;padding:6px;font-size:11px;color:#2D9E6B">🎯 In situ ehtimoli: o’lcham ≤10mm</div>`:""}
 </div>
 
 ${record.shape||record.echo?`
 <div class="section">
   <div class="section-title">🌊 UZI topilmalari</div>
   <table>
-    ${record.sizeA?`<tr><td>O'lcham</td><td>${record.sizeA} × ${record.sizeB} mm</td></tr>`:""}
+    ${record.sizeA?`<tr><td>O’lcham</td><td>${record.sizeA} × ${record.sizeB} mm</td></tr>`:""}
     ${record.shape?`<tr><td>Shakl</td><td>${record.shape}</td></tr>`:""}
     ${record.echo?`<tr><td>Echogenlik</td><td>${record.echo}</td></tr>`:""}
   </table>
@@ -263,14 +263,14 @@ ${record.density?`
   <div class="section-title">🔬 Mammografiya topilmalari</div>
   <table>
     <tr><td>To'qima zichligi</td><td>BI-RADS ${record.density}</td></tr>
-    ${record.calcification!==null?`<tr><td>Mikrokalsifikat</td><td>${record.calcification?"✓ Mavjud (xavfli belgi)":"Yo'q"}</td></tr>`:""}
+    ${record.calcification!==null?`<tr><td>Mikrokalsifikat</td><td>${record.calcification?"✓ Mavjud (xavfli belgi)":"Yoq"}</td></tr>`:""}
   </table>
 </div>`:""}
 
 <div class="section">
   <div class="section-title">📋 Tavsiyalar</div>
   <table>
-    ${record.birads>=4?`<tr><td>1</td><td>Onkolog konsultatsiyasi — tezkorlik bilan</td></tr><tr><td>2</td><td>Yadro biopsiyasi o'tkazish</td></tr><tr><td>3</td><td>MRI tekshiruvi (ixtiyoriy)</td></tr>`:`<tr><td>1</td><td>${bm.rec}</td></tr>`}
+    ${record.birads>=4?`<tr><td>1</td><td>Onkolog konsultatsiyasi — tezkorlik bilan</td></tr><tr><td>2</td><td>Yadro biopsiyasi o’tkazish</td></tr><tr><td>3</td><td>MRI tekshiruvi (ixtiyoriy)</td></tr>`:`<tr><td>1</td><td>${bm.rec}</td></tr>`}
   </table>
 </div>
 
@@ -934,20 +934,25 @@ function Statistics(){
       h.density||"",
       h.calcification!=null?(h.calcification?"Ha":"Yo'q"):"",
       h.date?.split("T")[0]||"",
-      `"${(h.patientNotes||"").replace(/"/g,"'')}"`,
+      '"' + (h.patientNotes||"").replace(/"/g,"''") + '"',
     ].join(";"));  // Semicolon — Excel uchun
 
-    // Statistika qo'shimcha sheet
+    // Statistika extra sheet
+    const urgent = all.filter(h=>h.birads>=4).length;
+    const inSituN = all.filter(h=>h.isInSitu).length;
+    const uziN = all.filter(h=>h.modality==="uzi").length;
+    const mammoN = all.filter(h=>h.modality==="mammo").length;
+    const combN = all.filter(h=>h.modality==="combined").length;
     const stats = [
       "",
       "STATISTIKA XULOSASI",
-      `Jami tahlillar;${all.length}`,
-      `Shoshilinch (BR4+);${all.filter(h=>h.birads>=4).length}`,
-      `In situ aniqlangan;${all.filter(h=>h.isInSitu).length}`,
-      `O'rtacha AI ishonch;${avgConf}%`,
-      `UZI tahlillar;${all.filter(h=>h.modality==="uzi").length}`,
-      `Mammo tahlillar;${all.filter(h=>h.modality==="mammo").length}`,
-      `Kombinatsiya;${all.filter(h=>h.modality==="combined").length}`,
+      "Jami tahlillar;" + all.length,
+      "Shoshilinch (BR4+);" + urgent,
+      "In situ aniqlangan;" + inSituN,
+      "Ortacha AI ishonch;" + avgConf + "%",
+      "UZI tahlillar;" + uziN,
+      "Mammo tahlillar;" + mammoN,
+      "Kombinatsiya;" + combN,
     ].join("\n");
 
     const csv = BOM + [headers.join(";"), ...rows].join("\n") + stats;
@@ -970,7 +975,7 @@ function Statistics(){
       `Jami bemorlar: ${PATIENTS.length}`,
       `Shoshilinch holat (BR4-6): ${PATIENTS.filter(p=>p.analyses[0].birads>=4).length}`,
       `In situ aniqlangan (≤10mm): ${inSituCount}`,
-      `O'rtacha AI ishonch: ${avgConf}%`,
+      `O’rtacha AI ishonch: ${avgConf}%`,
       "",
       "BI-RADS TAQSIMOTI:",
       ...biRadsDist.map(d=>`  ${d.name}: ${d.value} ta bemor`),
