@@ -390,6 +390,7 @@ function NewAnalysis({initialModality="uzi",onBack}){
   const [analyzed,setAnalyzed]=useState(false);
   const [loading,setLoading]=useState(false);
   const [uploadedFile,setUploadedFile]=useState(null);
+  const [uploadError,setUploadError]=useState(null);
   const [patientName,setPatientName]=useState("");
   const [patientAge,setPatientAge]=useState("");
   const [patientGender,setPatientGender]=useState("Ayol");
@@ -464,16 +465,43 @@ function NewAnalysis({initialModality="uzi",onBack}){
     </div>
     <div style={{border:`2px dashed ${dark?"#2E3A47":"#DDE6ED"}`,borderRadius:14,padding:24,textAlign:"center",marginBottom:20,cursor:"pointer",position:"relative"}}
       onClick={()=>document.getElementById("file-upload-input").click()}>
-      <input id="file-upload-input" type="file" accept="image/*,.dcm" style={{display:"none"}}
+      <input id="file-upload-input" type="file" accept="image/jpeg,image/png,.dcm,.dicom,.zip,application/zip" style={{display:"none"}}
         onChange={e=>{
           const file=e.target.files[0];
-          if(file){setUploadedFile(file);setAnalyzed(false);}
+          if(file){
+            // Frontend validatsiya
+            const fname = file.name.toLowerCase();
+            const allowedTypes=["image/jpeg","image/png","image/jpg","application/dicom","application/octet-stream","application/zip"];
+            const allowedExt=[".jpg",".jpeg",".png",".dcm",".dicom",".zip"];
+            const hasAllowedExt = allowedExt.some(ext=>fname.endsWith(ext));
+            if(!allowedTypes.includes(file.type) && !hasAllowedExt){
+              setUploadError("Qo'llab-quvvatlanadigan formatlar: JPG, PNG, DICOM (.dcm), ZIP");
+              setUploadedFile(null);
+              return;
+            }
+            if(file.size > 50*1024*1024){
+              setUploadError("Fayl hajmi 50MB dan oshmasin");
+              setUploadedFile(null);
+              return;
+            }
+            setUploadError(null);
+            setUploadedFile(file);
+            setAnalyzed(false);
+          }
         }}/>
       {uploadedFile
         ?<div>
           <div style={{fontSize:28}}>✅</div>
           <div style={{fontSize:13,color:"#2D9E6B",marginTop:6,fontWeight:600}}>{uploadedFile.name}</div>
-          <div style={{fontSize:11,color:"#8FA4B2"}}>{(uploadedFile.size/1024).toFixed(1)} KB</div>
+          <div style={{fontSize:11,color:"#8FA4B2"}}>
+            {(uploadedFile.size/1024).toFixed(1)} KB · {
+              uploadedFile.name.toLowerCase().endsWith('.dcm')||uploadedFile.name.toLowerCase().endsWith('.dicom')
+                ?"🏥 DICOM"
+                :uploadedFile.name.toLowerCase().endsWith('.zip')
+                ?"📦 ZIP arxiv"
+                :"🖼 Rasm"
+            }
+          </div>
         </div>
         :<div>
           <div style={{fontSize:28}}>📁</div>
@@ -481,6 +509,7 @@ function NewAnalysis({initialModality="uzi",onBack}){
           <div style={{fontSize:11,color:"#8FA4B2"}}>{t.newAnal.uploadSub}</div>
         </div>}
     </div>
+    {uploadError&&<div style={{fontSize:12,color:"#D63B3B",background:"#FCEBEB",borderRadius:10,padding:"8px 14px",marginTop:-10,marginBottom:10}}>⚠️ {uploadError}</div>}
     {(mod==="uzi"||mod==="combined")&&<Card style={{marginBottom:14}}>
       <div style={{fontSize:14,fontWeight:700,color:"#0B6E8A",marginBottom:14}}>🌊 {t.newAnal.uziFeatures}</div>
       <div style={{marginBottom:14}}>
@@ -548,19 +577,47 @@ function NewAnalysis({initialModality="uzi",onBack}){
         };
         const body = mod==="uzi"?uziBody : mod==="mammo"?mammoBody : {uzi:uziBody,mammo:mammoBody};
 
-        const res = await fetch(`${apiUrl}/api/analyze/${endpoint}`, {
-          method:"POST",
-          headers:{"Content-Type":"application/json"},
-          body: JSON.stringify(body),
-          signal: AbortSignal.timeout(20000)
-        });
-        if(res.ok){
-          const data = await res.json();
-          finalCat = data.category;
-          finalConf = data.confidence;
-          apiUsed = true;
+        // Agar rasm yuklangan bo'lsa — image endpoint ishlatamiz
+        if(uploadedFile){
+          const formData = new FormData();
+          formData.append("file", uploadedFile);
+          const imgRes = await fetch(`${apiUrl}/api/analyze/image`, {
+            method:"POST",
+            body: formData,
+            signal: AbortSignal.timeout(30000)
+          });
+          if(imgRes.ok){
+            const imgData = await imgRes.json();
+            finalCat = imgData.birads_category || finalCat;
+            finalConf = imgData.confidence || finalConf;
+            apiUsed = true;
+          } else if(imgRes.status===422){
+            const errData = await imgRes.json();
+            setUploadError(errData.detail?.message || "Noto'g'ri rasm! UZI yoki mammografiya rasmi yuklang.");
+            setLoading(false);
+            return;
+          }
+        } else {
+          // Rasm yuklanmagan — xususiyatlar bo'yicha tahlil
+          const res = await fetch(`${apiUrl}/api/analyze/${endpoint}`, {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body: JSON.stringify(body),
+            signal: AbortSignal.timeout(20000)
+          });
+          if(res.ok){
+            const data = await res.json();
+            finalCat = data.category;
+            finalConf = data.confidence;
+            apiUsed = true;
+          }
         }
       } catch(e){
+        if(e.message && e.message.includes("422")){
+          setUploadError("Noto'g'ri rasm! UZI yoki mammografiya rasmi yuklang.");
+          setLoading(false);
+          return;
+        }
         console.log("Backend ulanmadi, local hisoblash ishlatildi:", e.message);
       }
 
