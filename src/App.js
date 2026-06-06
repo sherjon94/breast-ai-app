@@ -309,6 +309,74 @@ function generateShareLink(record){
   return `${window.location.origin}?share=${data}`;
 }
 
+
+// ─── GLOBAL SEARCH ────────────────────────────────────────────────────────────
+function GlobalSearch({onClose, onPatient}){
+  const {dark, history} = useApp();
+  const [q, setQ] = useState("");
+  const tx = dark?"#E8EFF5":"#0D1B2A";
+  const ts = dark?"#8FA4B2":"#52687A";
+
+  const results = q.length > 1 ? (history||[]).filter(h =>
+    h.patientName?.toLowerCase().includes(q.toLowerCase()) ||
+    String(h.birads).includes(q) ||
+    h.patientAge?.toString().includes(q) ||
+    h.modality?.includes(q.toLowerCase())
+  ).slice(0, 8) : [];
+
+  const fmtDate = iso => {
+    const m=["Yan","Fev","Mar","Apr","May","Iyn","Iyl","Avg","Sen","Okt","Noy","Dek"];
+    const d=new Date(iso); return `${d.getDate()} ${m[d.getMonth()]}`;
+  };
+
+  return (
+    <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.6)",zIndex:9998,display:"flex",alignItems:"flex-start",justifyContent:"center",paddingTop:60,paddingLeft:16,paddingRight:16}}>
+      <div style={{background:dark?"#1A232E":"#fff",borderRadius:20,width:"100%",maxWidth:500,overflow:"hidden",boxShadow:"0 20px 60px rgba(0,0,0,.3)"}}>
+        <div style={{display:"flex",alignItems:"center",gap:12,padding:"14px 16px",borderBottom:`1px solid ${dark?"#2E3A47":"#EEF3F8"}`}}>
+          <span style={{fontSize:18}}>🔍</span>
+          <input autoFocus value={q} onChange={e=>setQ(e.target.value)}
+            placeholder="Bemor ismi, BI-RADS, yosh..."
+            style={{flex:1,border:"none",outline:"none",fontSize:15,background:"transparent",color:tx}}/>
+          <button onClick={onClose} style={{border:"none",background:"none",cursor:"pointer",fontSize:20,color:"#8FA4B2"}}>✕</button>
+        </div>
+        {q.length > 1 && (
+          <div style={{maxHeight:400,overflowY:"auto"}}>
+            {results.length === 0
+              ? <div style={{padding:32,textAlign:"center",color:"#8FA4B2"}}>
+                  <div style={{fontSize:32,marginBottom:8}}>🔍</div>
+                  <div>"{q}" topilmadi</div>
+                </div>
+              : results.map(h => (
+                <div key={h.id} onClick={()=>{onPatient(h);onClose();}}
+                  style={{display:"flex",alignItems:"center",gap:12,padding:"12px 16px",cursor:"pointer",borderBottom:`1px solid ${dark?"#2E3A47":"#EEF3F8"}`,transition:"background .15s"}}
+                  onMouseEnter={e=>e.currentTarget.style.background=dark?"#263040":"#F7F9FC"}
+                  onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+                  <div style={{width:40,height:40,borderRadius:12,background:"#E6F1FB",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,fontSize:13,color:"#0B6E8A",flexShrink:0}}>
+                    {h.patientName.split(" ").map(w=>w[0]).slice(0,2).join("")}
+                  </div>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{fontWeight:600,fontSize:14,color:tx}}>{h.patientName}</div>
+                    <div style={{fontSize:12,color:ts,marginTop:2}}>
+                      {h.patientAge&&`${h.patientAge} yosh · `}
+                      <Badge cat={h.birads}/>
+                    </div>
+                  </div>
+                  <div style={{fontSize:11,color:"#8FA4B2",flexShrink:0}}>{fmtDate(h.date)}</div>
+                </div>
+              ))
+            }
+          </div>
+        )}
+        {q.length <= 1 && (
+          <div style={{padding:24,color:"#8FA4B2",fontSize:13,textAlign:"center"}}>
+            Kamida 2 ta harf kiriting
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── DASHBOARD ────────────────────────────────────────────────────────────────
 function Dashboard({onNewAnalysis,onPatient}){
   const {t,dark,history}=useApp();
@@ -757,6 +825,7 @@ function NewAnalysis({initialModality="uzi",onBack}){
 
       setLoading(false);
       setAnalyzed(true);
+      if(finalCat>=4) setUrgentNotif(true);
       addToHistory({
         id: Date.now().toString(),
         date: new Date().toISOString(),
@@ -796,6 +865,95 @@ function Statistics(){
   const avgConf=all.length>0?Math.round(all.reduce((s,h)=>s+h.confidence,0)/all.length*100):0;
   const tx=dark?"#E8EFF5":"#0D1B2A";
 
+  function downloadSPSS(){
+    // SPSS .sav format simulyatsiyasi (CSV bilan meta)
+    const header = [
+      "* SPSS Syntax for Breast AI Dataset",
+      "* Generated: " + new Date().toISOString(),
+      "* Variables: ID, PatientName, Age, Gender, BIRADS, Confidence, Modality, InSitu, Date",
+      "",
+      "DATA LIST FILE='breast_ai_data.csv' FREE (",
+      "  ID (A10), PatientName (A50), Age (F3), Gender (A10),",
+      "  BIRADS (F1), Confidence (F5.2), Modality (A10), InSitu (F1), Date (A10)",
+      ").",
+      "",
+      "VARIABLE LABELS",
+      "  ID 'Bemor identifikatori'",
+      "  PatientName 'Bemor ismi'",
+      "  Age 'Yosh'",
+      "  BIRADS 'BI-RADS kategoriya (1-6)'",
+      "  Confidence 'AI ishonch darajasi (0-1)'",
+      "  Modality 'Tahlil turi (uzi/mammo/combined)'",
+      "  InSitu 'In situ ehtimoli (0=yoq, 1=ha)'.",
+      "",
+      "VALUE LABELS BIRADS",
+      "  1 'Negativ' 2 'Xavfsiz' 3 'Ehtimol xavfsiz'",
+      "  4 'Shubhali' 5 'Xavfli' 6 'Tasdiqlangan'.",
+      "",
+      "FREQUENCIES VARIABLES=BIRADS InSitu.",
+      "CROSSTABS BIRADS BY Modality.",
+      "DESCRIPTIVES VARIABLES=Age Confidence.",
+    ].join("\n");
+
+    const csvData = [
+      "ID,PatientName,Age,Gender,BIRADS,Confidence,Modality,InSitu,Date",
+      ...all.map(h=>[
+        h.id, `"${h.patientName}"`, h.patientAge||"",
+        h.patientGender||"", h.birads,
+        h.confidence.toFixed(4), h.modality,
+        h.isInSitu?1:0, h.date?.split("T")[0]||""
+      ].join(","))
+    ].join("\n");
+
+    dataDownload(header + "\n\n* DATA:\n" + csvData, "breast_ai_spss.sps");
+  }
+
+  function downloadExcel(){
+    // Excel-compatible CSV (BOM bilan, Excel da to'g'ri ochiladi)
+    const BOM = "\uFEFF";
+    const headers = [
+      "ID", "Bemor ismi", "Yosh", "Jins", "BI-RADS",
+      "AI ishonch %", "Tahlil turi", "In situ",
+      "O'lcham A (mm)", "O'lcham B (mm)", "Shakl",
+      "Echogenlik", "Zichlik", "Mikrokalsifikat",
+      "Sana", "Izoh"
+    ];
+    const rows = all.map(h => [
+      h.id,
+      h.patientName,
+      h.patientAge||"",
+      h.patientGender||"",
+      h.birads,
+      Math.round(h.confidence*100),
+      h.modality==="uzi"?"Ultrasound":h.modality==="mammo"?"Mammografiya":"Kombinatsiya",
+      h.isInSitu?"Ha":"Yo'q",
+      h.sizeA||"",
+      h.sizeB||"",
+      h.shape||"",
+      h.echo||"",
+      h.density||"",
+      h.calcification!=null?(h.calcification?"Ha":"Yo'q"):"",
+      h.date?.split("T")[0]||"",
+      `"${(h.patientNotes||"").replace(/"/g,"'')}"`,
+    ].join(";"));  // Semicolon — Excel uchun
+
+    // Statistika qo'shimcha sheet
+    const stats = [
+      "",
+      "STATISTIKA XULOSASI",
+      `Jami tahlillar;${all.length}`,
+      `Shoshilinch (BR4+);${all.filter(h=>h.birads>=4).length}`,
+      `In situ aniqlangan;${all.filter(h=>h.isInSitu).length}`,
+      `O'rtacha AI ishonch;${avgConf}%`,
+      `UZI tahlillar;${all.filter(h=>h.modality==="uzi").length}`,
+      `Mammo tahlillar;${all.filter(h=>h.modality==="mammo").length}`,
+      `Kombinatsiya;${all.filter(h=>h.modality==="combined").length}`,
+    ].join("\n");
+
+    const csv = BOM + [headers.join(";"), ...rows].join("\n") + stats;
+    dataDownload(csv, "breast_ai_excel.csv");
+  }
+
   function downloadCSV(){
     const headers=["ID","Bemor","Yosh","Jins","Sana","Modalligi","BI-RADS","Ishonch %","In situ","Izoh"];
     const rows=all.map(h=>[h.id,h.patientName,h.patientAge||"",h.patientGender||"",h.date?.split("T")[0]||"",h.modality,h.birads,Math.round(h.confidence*100),h.isInSitu?"Ha":"Yo'q",h.patientNotes||""].join(","));
@@ -826,9 +984,11 @@ function Statistics(){
   return <div>
     <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8,flexWrap:"wrap",gap:10}}>
       <div style={{fontSize:24,fontWeight:800,color:tx,letterSpacing:"-0.5px"}}>{t.stats.title}</div>
-      <div style={{display:"flex",gap:8}}>
+      <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
         <button onClick={downloadCSV} style={{padding:"7px 14px",borderRadius:10,border:"1px solid #0B6E8A",background:"#E6F1FB",color:"#0B6E8A",fontSize:12,fontWeight:600,cursor:"pointer"}}>{t.stats.downloadCsv}</button>
         <button onClick={downloadStatsPDF} style={{padding:"7px 14px",borderRadius:10,border:"1px solid #6A3DAA",background:"#EEEDFE",color:"#6A3DAA",fontSize:12,fontWeight:600,cursor:"pointer"}}>{t.stats.downloadPdf}</button>
+        <button onClick={downloadSPSS} style={{padding:"7px 14px",borderRadius:10,border:"1px solid #1A7A5E",background:"#E1F5EE",color:"#1A7A5E",fontSize:12,fontWeight:600,cursor:"pointer"}}>📊 SPSS</button>
+        <button onClick={downloadExcel} style={{padding:"7px 14px",borderRadius:10,border:"1px solid #217346",background:"#E8F5E9",color:"#217346",fontSize:12,fontWeight:600,cursor:"pointer"}}>📗 Excel</button>
       </div>
     </div>
     <div style={{fontSize:13,color:"#52687A",marginBottom:20}}>May 2025</div>
@@ -1067,6 +1227,105 @@ function Settings(){
 }
 
 
+
+// ─── COMPARE ─────────────────────────────────────────────────────────────────
+function CompareScreen({onClose}){
+  const {dark, history, t} = useApp();
+  const [sel1, setSel1] = useState(null);
+  const [sel2, setSel2] = useState(null);
+  const [search1, setSearch1] = useState("");
+  const [search2, setSearch2] = useState("");
+  const tx = dark?"#E8EFF5":"#0D1B2A";
+  const ts = dark?"#8FA4B2":"#52687A";
+  const all = history||[];
+
+  const filtered1 = search1.length>1 ? all.filter(h=>h.patientName.toLowerCase().includes(search1.toLowerCase())) : all.slice(0,5);
+  const filtered2 = search2.length>1 ? all.filter(h=>h.patientName.toLowerCase().includes(search2.toLowerCase())) : all.slice(0,5);
+
+  const Row = ({label, v1, v2, highlight}) => {
+    const diff = v1 !== v2;
+    return (
+      <tr style={{borderBottom:`1px solid ${dark?"#2E3A47":"#EEF3F8"}`}}>
+        <td style={{padding:"8px 10px",fontSize:12,color:"#8FA4B2",width:"30%"}}>{label}</td>
+        <td style={{padding:"8px 10px",fontSize:12,fontWeight:500,color:highlight&&v1>=4?"#D63B3B":tx,textAlign:"center"}}>{v1??"-"}</td>
+        <td style={{padding:"8px 10px",fontSize:12,color:diff?"#E86B2A":"#8FA4B2",textAlign:"center",fontSize:16}}>{diff?"≠":"="}</td>
+        <td style={{padding:"8px 10px",fontSize:12,fontWeight:500,color:highlight&&v2>=4?"#D63B3B":tx,textAlign:"center"}}>{v2??"-"}</td>
+      </tr>
+    );
+  };
+
+  const PatientPicker = ({value, onSelect, search, setSearch, label}) => (
+    <div style={{flex:1}}>
+      <div style={{fontSize:12,color:ts,marginBottom:6}}>{label}</div>
+      {value
+        ? <div style={{background:dark?"#1E2733":"#F7F9FC",borderRadius:12,padding:12,cursor:"pointer"}} onClick={()=>onSelect(null)}>
+            <div style={{fontWeight:600,fontSize:13,color:tx}}>{value.patientName}</div>
+            <div style={{fontSize:11,color:ts,marginTop:3}}><Badge cat={value.birads}/></div>
+          </div>
+        : <div>
+            <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Bemor tanlang..."
+              style={{width:"100%",padding:"8px 12px",borderRadius:10,border:`1px solid ${dark?"#2E3A47":"#DDE6ED"}`,background:dark?"#1E2733":"#fff",fontSize:13,color:tx,outline:"none",marginBottom:6,boxSizing:"border-box"}}/>
+            <div style={{maxHeight:150,overflowY:"auto",border:`1px solid ${dark?"#2E3A47":"#DDE6ED"}`,borderRadius:10,background:dark?"#1A232E":"#fff"}}>
+              {(search.length>1?filtered1:all.slice(0,5)).map(h=>(
+                <div key={h.id} onClick={()=>onSelect(h)}
+                  style={{padding:"8px 12px",cursor:"pointer",fontSize:13,color:tx,borderBottom:`1px solid ${dark?"#2E3A47":"#EEF3F8"}`}}
+                  onMouseEnter={e=>e.currentTarget.style.background=dark?"#263040":"#F7F9FC"}
+                  onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+                  {h.patientName} <span style={{fontSize:11,color:"#8FA4B2"}}>· BR{h.birads}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+      }
+    </div>
+  );
+
+  return (
+    <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.5)",zIndex:999,display:"flex",alignItems:"center",justifyContent:"center",padding:16}}>
+      <div style={{background:dark?"#1A232E":"#fff",borderRadius:20,width:"100%",maxWidth:600,maxHeight:"90vh",overflowY:"auto",padding:20}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}}>
+          <div style={{fontSize:16,fontWeight:700,color:tx}}>⚖️ Tahlillarni solishtirish</div>
+          <button onClick={onClose} style={{border:"none",background:"none",cursor:"pointer",fontSize:20,color:"#8FA4B2"}}>✕</button>
+        </div>
+
+        <div style={{display:"flex",gap:12,marginBottom:20}}>
+          <PatientPicker value={sel1} onSelect={setSel1} search={search1} setSearch={setSearch1} label="1-chi bemor"/>
+          <PatientPicker value={sel2} onSelect={setSel2} search={search2} setSearch={setSearch2} label="2-chi bemor"/>
+        </div>
+
+        {sel1 && sel2 && (
+          <div>
+            <div style={{fontSize:13,fontWeight:600,color:tx,marginBottom:10}}>Taqqoslash natijalari</div>
+            <table style={{width:"100%",borderCollapse:"collapse"}}>
+              <thead>
+                <tr style={{background:dark?"#263040":"#F7F9FC"}}>
+                  <td style={{padding:"8px 10px",fontSize:11,color:"#8FA4B2"}}>Ko'rsatkich</td>
+                  <td style={{padding:"8px 10px",fontSize:11,color:"#0B6E8A",textAlign:"center"}}>{sel1.patientName.split(" ")[0]}</td>
+                  <td style={{padding:"8px 10px",textAlign:"center"}}></td>
+                  <td style={{padding:"8px 10px",fontSize:11,color:"#0B6E8A",textAlign:"center"}}>{sel2.patientName.split(" ")[0]}</td>
+                </tr>
+              </thead>
+              <tbody>
+                <Row label="BI-RADS" v1={sel1.birads} v2={sel2.birads} highlight/>
+                <Row label="AI ishonch" v1={`${Math.round(sel1.confidence*100)}%`} v2={`${Math.round(sel2.confidence*100)}%`}/>
+                <Row label="Yosh" v1={sel1.patientAge} v2={sel2.patientAge}/>
+                <Row label="Tahlil turi" v1={sel1.modality} v2={sel2.modality}/>
+                <Row label="In situ" v1={sel1.isInSitu?"Ha":"Yo'q"} v2={sel2.isInSitu?"Ha":"Yo'q"}/>
+                <Row label="O'lcham A" v1={sel1.sizeA?`${sel1.sizeA}mm`:"-"} v2={sel2.sizeA?`${sel2.sizeA}mm`:"-"}/>
+              </tbody>
+            </table>
+            {(sel1.birads >= 4 || sel2.birads >= 4) && (
+              <div style={{marginTop:14,padding:12,background:"#FCEBEB",borderRadius:10,fontSize:12,color:"#D63B3B"}}>
+                ⚠️ Bir yoki ikki bemor uchun BI-RADS 4+ — shoshilinch onkolog konsultatsiyasi tavsiya etiladi
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── HISTORY SCREEN ───────────────────────────────────────────────────────────
 function HistoryScreen({forcedRecord=null,onBack=null}){
   const {t,dark,history,addToHistory,doctorName,doctorDept}=useApp();
@@ -1233,6 +1492,9 @@ export default function App(){
   const [doctorDept,setDoctorDept]=useState(()=>{try{return localStorage.getItem("doctorDept")||"Diagnostika bo'limi"}catch{return "Diagnostika bo'limi"}});
   const [tab,setTab]=useState("dashboard");
   const [selectedPatient,setSelectedPatient]=useState(null);
+  const [showSearch,setShowSearch]=useState(false);
+  const [showCompare,setShowCompare]=useState(false);
+  const [urgentNotif,setUrgentNotif]=useState(false);
   const [newAnalysisMod,setNewAnalysisMod]=useState(null);
   const [history,setHistory]=useState(()=>{
     try{ return JSON.parse(localStorage.getItem("breastai_history")||"[]"); }
@@ -1251,6 +1513,13 @@ export default function App(){
 
   function goTab(id){setTab(id);setSelectedPatient(null);setNewAnalysisMod(null);}
 
+  // Shoshilinch holat tekshirish
+  useEffect(()=>{
+    const hist = JSON.parse(localStorage.getItem("breastai_history")||"[]");
+    const urgent = hist.filter(h=>h.birads>=4);
+    if(urgent.length>0) setUrgentNotif(true);
+  },[history]);
+
   function renderContent(){
     if(selectedPatient) return <HistoryScreen forcedRecord={selectedPatient} onBack={()=>setSelectedPatient(null)}/>;
     if(newAnalysisMod!==null) return <NewAnalysis initialModality={newAnalysisMod} onBack={()=>setNewAnalysisMod(null)}/>;
@@ -1266,10 +1535,18 @@ export default function App(){
         <div style={{background:hbg,borderBottom:`1px solid ${hborder}`,padding:"13px 18px",display:"flex",alignItems:"center",gap:10,position:"sticky",top:0,zIndex:100,transition:"background .3s"}}>
           <div style={{width:32,height:32,borderRadius:10,background:"#0B6E8A",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:13,color:"#fff"}}>B</div>
           <div style={{fontWeight:800,fontSize:16,color:tx,letterSpacing:"-0.3px"}}>{t.appName}</div>
-          <div style={{marginLeft:"auto"}}>
-            <button onClick={()=>setNewAnalysisMod("uzi")} style={{padding:"8px 16px",borderRadius:10,border:"none",background:"#0B6E8A",color:"#fff",fontWeight:700,fontSize:13,cursor:"pointer"}}>{t.newAnalysis}</button>
+          <div style={{marginLeft:"auto",display:"flex",gap:8,alignItems:"center"}}>
+            <button onClick={()=>setShowSearch(true)} style={{width:36,height:36,borderRadius:10,border:`1px solid ${dark?"#2E3A47":"#DDE6ED"}`,background:dark?"#1E2733":"#fff",cursor:"pointer",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>🔍</button>
+            <button onClick={()=>setShowCompare(true)} style={{width:36,height:36,borderRadius:10,border:`1px solid ${dark?"#2E3A47":"#DDE6ED"}`,background:dark?"#1E2733":"#fff",cursor:"pointer",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>⚖️</button>
+            {urgentNotif&&<div style={{position:"relative",display:"inline-flex"}}>
+              <button onClick={()=>{setUrgentNotif(false);goTab("patients");}} style={{width:36,height:36,borderRadius:10,border:"1px solid #E86B2A",background:"#FAECE7",cursor:"pointer",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>🔔</button>
+              <span style={{position:"absolute",top:-4,right:-4,width:10,height:10,borderRadius:"50%",background:"#E86B2A",border:"2px solid #fff"}}/>
+            </div>}
+            <button onClick={()=>setNewAnalysisMod("uzi")} style={{padding:"8px 14px",borderRadius:10,border:"none",background:"#0B6E8A",color:"#fff",fontWeight:700,fontSize:13,cursor:"pointer"}}>{t.newAnalysis}</button>
           </div>
         </div>
+        {showSearch&&<GlobalSearch onClose={()=>setShowSearch(false)} onPatient={p=>{setSelectedPatient(p);setShowSearch(false);}}/>}
+        {showCompare&&<CompareScreen onClose={()=>setShowCompare(false)}/>}
         <div style={{flex:1,overflowY:"auto",padding:16,paddingBottom:80}}>{renderContent()}</div>
         <div style={{position:"fixed",bottom:0,left:0,right:0,background:hbg,borderTop:`1px solid ${hborder}`,display:"flex",zIndex:100,transition:"background .3s"}}>
           {TABS.map((id,i)=>(
