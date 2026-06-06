@@ -45,7 +45,7 @@ const T = {
 };
 
 // ─── CONTEXT ──────────────────────────────────────────────────────────────────
-const AppCtx = createContext({ lang:"uz", t:T.uz, setLang:()=>{}, dark:false, setDark:()=>{}, apiUrl:"https://breast-ai-backend.onrender.com", setApiUrl:()=>{}, history:[], addToHistory:()=>{} });
+const AppCtx = createContext({ lang:"uz", t:T.uz, setLang:()=>{}, dark:false, setDark:()=>{}, apiUrl:"https://breast-ai-backend.onrender.com", setApiUrl:()=>{}, history:[], addToHistory:()=>{}, doctorName:"Dr.Rashidova Mahliyo", doctorDept:"Diagnostika bo'limi" });
 function useApp(){ return useContext(AppCtx); }
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
@@ -173,6 +173,140 @@ function SSection({title,children}){
     <div style={{fontSize:11,fontWeight:700,color:"#8FA4B2",marginBottom:8,textTransform:"uppercase",letterSpacing:"0.8px"}}>{title}</div>
     <Card style={{padding:"0 16px"}}>{children}</Card>
   </div>;
+}
+
+
+// ─── PDF HISOBOT ──────────────────────────────────────────────────────────────
+function generatePDFReport(record, doctorName, doctorDept){
+  const bm = T.uz.birads[record.birads] || T.uz.birads[2];
+  const color = record.birads >= 4 ? "#D63B3B" : record.birads === 3 ? "#BA7517" : "#2D9E6B";
+  const date = new Date(record.date).toLocaleDateString("uz-UZ", {year:"numeric",month:"long",day:"numeric"});
+  const now  = new Date().toLocaleDateString("uz-UZ", {year:"numeric",month:"long",day:"numeric",hour:"2-digit",minute:"2-digit"});
+
+  const html = `<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"/>
+<title>Tibbiy Hisobot — ${record.patientName}</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:Arial,sans-serif;font-size:13px;color:#222;padding:30px;max-width:800px;margin:0 auto}
+  .header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #0B6E8A;padding-bottom:16px;margin-bottom:20px}
+  .logo{font-size:24px;font-weight:800;color:#0B6E8A}
+  .logo span{font-size:12px;display:block;font-weight:400;color:#52687A}
+  .meta{text-align:right;font-size:11px;color:#52687A}
+  .section{margin-bottom:20px}
+  .section-title{font-size:14px;font-weight:700;color:#0B6E8A;border-bottom:1px solid #DDE6ED;padding-bottom:6px;margin-bottom:12px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .field{background:#F7F9FC;border-radius:8px;padding:10px}
+  .field label{font-size:10px;color:#8FA4B2;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:3px}
+  .field value{font-size:13px;font-weight:500;color:#0D1B2A}
+  .birads-box{background:${color}15;border:2px solid ${color};border-radius:12px;padding:16px;text-align:center;margin-bottom:20px}
+  .birads-num{font-size:36px;font-weight:800;color:${color}}
+  .birads-label{font-size:16px;font-weight:600;color:${color}}
+  .birads-rec{font-size:12px;color:#52687A;margin-top:6px}
+  .risk-bar{height:12px;border-radius:6px;background:#EEF3F8;overflow:hidden;margin:8px 0}
+  .risk-fill{height:100%;background:${color};border-radius:6px;width:${Math.round(record.confidence*100)}%}
+  .warn{background:#FFF3CD;border:1px solid #F0A500;border-radius:8px;padding:12px;font-size:11px;color:#854F0B;margin-top:20px}
+  .footer{border-top:1px solid #DDE6ED;padding-top:12px;margin-top:20px;font-size:10px;color:#8FA4B2;text-align:center}
+  table{width:100%;border-collapse:collapse}
+  td{padding:7px 10px;border-bottom:1px solid #EEF3F8;font-size:12px}
+  td:first-child{color:#8FA4B2;width:45%}
+  td:last-child{font-weight:500;color:#0D1B2A}
+  @media print{body{padding:20px}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo">🔬 Breast AI<span>Multimodal diagnostika tizimi</span></div>
+  <div class="meta">
+    <div><strong>Hisobot raqami:</strong> ${record.id}</div>
+    <div><strong>Sana:</strong> ${now}</div>
+    <div><strong>Doktor:</strong> ${doctorName}</div>
+    <div><strong>Bo'lim:</strong> ${doctorDept}</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">👤 Bemor ma'lumotlari</div>
+  <div class="grid">
+    <div class="field"><label>F.I.O.</label><value>${record.patientName}</value></div>
+    <div class="field"><label>Yosh / Jins</label><value>${record.patientAge||"—"} yosh / ${record.patientGender||"—"}</value></div>
+    <div class="field"><label>Tahlil sanasi</label><value>${date}</value></div>
+    <div class="field"><label>Tahlil turi</label><value>${record.modality==="uzi"?"Ultrasound (UZI)":record.modality==="mammo"?"Mammografiya":"Kombinatsiya (UZI+Mammo)"}</value></div>
+  </div>
+  ${record.patientNotes?`<div class="field" style="margin-top:10px"><label>Izoh / Anamnez</label><value>${record.patientNotes}</value></div>`:""}
+</div>
+
+<div class="birads-box">
+  <div class="birads-num">BI-RADS ${record.birads}</div>
+  <div class="birads-label">${bm.label}</div>
+  <div class="birads-rec">${bm.rec}</div>
+  <div style="margin-top:12px;font-size:11px;color:#52687A">AI ishonch darajasi</div>
+  <div class="risk-bar"><div class="risk-fill"></div></div>
+  <div style="font-size:13px;font-weight:600;color:${color}">${Math.round(record.confidence*100)}%</div>
+  ${record.isInSitu?`<div style="margin-top:8px;background:#EAF3DE;border-radius:6px;padding:6px;font-size:11px;color:#2D9E6B">🎯 In situ ehtimoli: o'lcham ≤10mm</div>`:""}
+</div>
+
+${record.shape||record.echo?`
+<div class="section">
+  <div class="section-title">🌊 UZI topilmalari</div>
+  <table>
+    ${record.sizeA?`<tr><td>O'lcham</td><td>${record.sizeA} × ${record.sizeB} mm</td></tr>`:""}
+    ${record.shape?`<tr><td>Shakl</td><td>${record.shape}</td></tr>`:""}
+    ${record.echo?`<tr><td>Echogenlik</td><td>${record.echo}</td></tr>`:""}
+  </table>
+</div>`:""}
+
+${record.density?`
+<div class="section">
+  <div class="section-title">🔬 Mammografiya topilmalari</div>
+  <table>
+    <tr><td>To'qima zichligi</td><td>BI-RADS ${record.density}</td></tr>
+    ${record.calcification!==null?`<tr><td>Mikrokalsifikat</td><td>${record.calcification?"✓ Mavjud (xavfli belgi)":"Yo'q"}</td></tr>`:""}
+  </table>
+</div>`:""}
+
+<div class="section">
+  <div class="section-title">📋 Tavsiyalar</div>
+  <table>
+    ${record.birads>=4?`<tr><td>1</td><td>Onkolog konsultatsiyasi — tezkorlik bilan</td></tr><tr><td>2</td><td>Yadro biopsiyasi o'tkazish</td></tr><tr><td>3</td><td>MRI tekshiruvi (ixtiyoriy)</td></tr>`:`<tr><td>1</td><td>${bm.rec}</td></tr>`}
+  </table>
+</div>
+
+<div class="warn">
+  ⚠️ <strong>Muhim eslatma:</strong> Bu hisobot AI yordamida yaratilgan va faqat dastlabki baholash uchun mo'ljallangan. 
+  Klinik qarorlar faqat malakali shifokor tomonidan qabul qilinishi kerak.
+</div>
+
+<div class="footer">
+  Breast AI v1.0 — Multimodal diagnostika tizimi | ${now} | ${doctorName}, ${doctorDept}
+</div>
+</body>
+</html>`;
+
+  // Brauzerda chop etish oynasi orqali PDF
+  const win = window.open("","_blank","width=900,height=700");
+  if(win){
+    win.document.write(html);
+    win.document.close();
+    win.focus();
+    setTimeout(()=>win.print(), 500);
+  }
+}
+
+// ─── SHARE LINK ────────────────────────────────────────────────────────────────
+function generateShareLink(record){
+  const data = encodeURIComponent(JSON.stringify({
+    n: record.patientName,
+    a: record.patientAge,
+    b: record.birads,
+    c: Math.round(record.confidence*100),
+    m: record.modality,
+    d: record.date,
+    i: record.isInSitu,
+  }));
+  return `${window.location.origin}?share=${data}`;
 }
 
 // ─── DASHBOARD ────────────────────────────────────────────────────────────────
@@ -663,8 +797,8 @@ function Statistics(){
   const tx=dark?"#E8EFF5":"#0D1B2A";
 
   function downloadCSV(){
-    const headers=["ID","Ism","Yosh","Sana","Modalligi","BI-RADS","Ishonch %","Xavf %","In situ"];
-    const rows=PATIENTS.map(p=>{const a=p.analyses[0];return[p.id,p.name,p.age,a.date,a.modality,a.birads,Math.round(a.confidence*100),a.malignancyRisk,inSitu(a.uzi)?"Ha":"Yo'q"].join(",");});
+    const headers=["ID","Bemor","Yosh","Jins","Sana","Modalligi","BI-RADS","Ishonch %","In situ","Izoh"];
+    const rows=all.map(h=>[h.id,h.patientName,h.patientAge||"",h.patientGender||"",h.date?.split("T")[0]||"",h.modality,h.birads,Math.round(h.confidence*100),h.isInSitu?"Ha":"Yo'q",h.patientNotes||""].join(","));
     const csv=[headers.join(","),...rows].join("\n");
     dataDownload(csv,"breast_ai_statistika.csv");
   }
@@ -760,14 +894,13 @@ function Statistics(){
 
 // ─── SETTINGS ─────────────────────────────────────────────────────────────────
 function Settings(){
-  const {lang,t,setLang,dark,setDark,apiUrl,setApiUrl}=useApp();
+  const {lang,t,setLang,dark,setDark,apiUrl,setApiUrl,doctorName,setDoctorName,doctorDept,setDoctorDept}=useApp();
   const s=t.settings;
   const [notif,setNotif]=useState(true);
   const [auto,setAuto]=useState(false);
   const [editApi,setEditApi]=useState(false);
   const [toast,setToast]=useState(null);
-  const [doctorName,setDoctorName]=useState("Dr.Rashidova Mahliyo");
-  const [doctorDept,setDoctorDept]=useState("Diagnostika bo'limi");
+
   const [editDoc,setEditDoc]=useState(false);
   const [apiStatus,setApiStatus]=useState(null);
   const [modal,setModal]=useState(null);
@@ -860,7 +993,7 @@ function Settings(){
           <input value={doctorDept} onChange={e=>setDoctorDept(e.target.value)} placeholder={s.deptPlaceholder}
             style={{width:"100%",padding:"9px 12px",borderRadius:10,border:"1px solid #DDE6ED",fontSize:13,color:"#0D1B2A",marginBottom:12,boxSizing:"border-box",outline:"none"}}/>
           <div style={{display:"flex",gap:8}}>
-            <button onClick={()=>{setEditDoc(false);toast2(s.toastSaved,"success");}} style={{flex:1,padding:"9px",borderRadius:10,border:"none",background:"#0B6E8A",color:"#fff",fontWeight:700,fontSize:13,cursor:"pointer"}}>{s.save}</button>
+            <button onClick={()=>{setEditDoc(false);toast2(s.toastSaved,"success");try{localStorage.setItem("doctorName",doctorName);localStorage.setItem("doctorDept",doctorDept);}catch{}}} style={{flex:1,padding:"9px",borderRadius:10,border:"none",background:"#0B6E8A",color:"#fff",fontWeight:700,fontSize:13,cursor:"pointer"}}>{s.save}</button>
             <button onClick={()=>setEditDoc(false)} style={{flex:1,padding:"9px",borderRadius:10,border:"1px solid #DDE6ED",background:"#fff",color:"#52687A",fontWeight:600,fontSize:13,cursor:"pointer"}}>{s.cancel}</button>
           </div>
         </div>
@@ -925,7 +1058,7 @@ function Settings(){
 
 // ─── HISTORY SCREEN ───────────────────────────────────────────────────────────
 function HistoryScreen({forcedRecord=null,onBack=null}){
-  const {t,dark,history,addToHistory}=useApp();
+  const {t,dark,history,addToHistory,doctorName,doctorDept}=useApp();
   const [search,setSearch]=useState("");
   const [selected,setSelected]=useState(forcedRecord);
   const tx=dark?"#E8EFF5":"#0D1B2A", ts=dark?"#8FA4B2":"#52687A";
@@ -952,7 +1085,22 @@ function HistoryScreen({forcedRecord=null,onBack=null}){
     const color=bc(h.birads), bg2=bb(h.birads);
     const bm=t.birads[h.birads]||t.birads[2];
     return <div>
-      <button onClick={()=>{setSelected(null);if(onBack)onBack();}} style={{display:"flex",alignItems:"center",gap:6,background:"none",border:"none",cursor:"pointer",color:"#0B6E8A",fontSize:13,fontWeight:600,marginBottom:18,padding:0}}>← Orqaga</button>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:18,flexWrap:"wrap",gap:10}}>
+        <button onClick={()=>{setSelected(null);if(onBack)onBack();}} style={{display:"flex",alignItems:"center",gap:6,background:"none",border:"none",cursor:"pointer",color:"#0B6E8A",fontSize:13,fontWeight:600,padding:0}}>← Orqaga</button>
+        <div style={{display:"flex",gap:8}}>
+          <button onClick={()=>generatePDFReport(h,doctorName,doctorDept)}
+            style={{padding:"7px 14px",borderRadius:10,border:"1px solid #6A3DAA",background:"#EEEDFE",color:"#6A3DAA",fontSize:12,fontWeight:600,cursor:"pointer"}}>
+            📄 PDF
+          </button>
+          <button onClick={()=>{
+            const link=generateShareLink(h);
+            navigator.clipboard.writeText(link).then(()=>alert("Havola nusxalandi! ✓")).catch(()=>alert(link));
+          }}
+            style={{padding:"7px 14px",borderRadius:10,border:"1px solid #0B6E8A",background:"#E6F1FB",color:"#0B6E8A",fontSize:12,fontWeight:600,cursor:"pointer"}}>
+            🔗 Ulashish
+          </button>
+        </div>
+      </div>
       <Card style={{marginBottom:14}}>
         <div style={{display:"flex",alignItems:"center",gap:14}}>
           <div style={{width:52,height:52,borderRadius:14,background:"#E6F1FB",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:18,color:"#0B6E8A",flexShrink:0}}>
@@ -994,6 +1142,30 @@ function HistoryScreen({forcedRecord=null,onBack=null}){
         <div style={{fontSize:14,fontWeight:700,color:tx,marginBottom:8}}>📝 Izoh</div>
         <p style={{fontSize:13,color:ts,lineHeight:1.5,margin:0}}>{h.patientNotes}</p>
       </Card>}
+
+      {/* Shu bemor uchun dinamika */}
+      {(()=>{
+        const samePatient=(history||[]).filter(r=>r.patientName===h.patientName).sort((a,b)=>new Date(a.date)-new Date(b.date));
+        if(samePatient.length<2) return null;
+        const chartData=samePatient.map(r=>({
+          date:new Date(r.date).toLocaleDateString("uz-UZ",{month:"short",day:"numeric"}),
+          birads:r.birads,
+          conf:Math.round(r.confidence*100),
+        }));
+        return <Card style={{marginBottom:14}}>
+          <div style={{fontSize:14,fontWeight:700,color:tx,marginBottom:14}}>📈 Bemor dinamikasi ({samePatient.length} ta tahlil)</div>
+          <ResponsiveContainer width="100%" height={160}>
+            <LineChart data={chartData} margin={{top:4,right:4,left:-20,bottom:0}}>
+              <CartesianGrid strokeDasharray="3 3" stroke={dark?"#2E3A47":"#EEF3F8"} vertical={false}/>
+              <XAxis dataKey="date" tick={{fontSize:10,fill:"#8FA4B2"}} axisLine={false} tickLine={false}/>
+              <YAxis domain={[1,6]} ticks={[1,2,3,4,5,6]} tick={{fontSize:10,fill:"#8FA4B2"}} axisLine={false} tickLine={false}/>
+              <Tooltip contentStyle={{background:dark?"#1E2733":"#fff",border:"1px solid #DDE6ED",borderRadius:8,fontSize:11}} formatter={(v)=>[`BI-RADS ${v}`]}/>
+              <Line type="monotone" dataKey="birads" stroke="#0B6E8A" strokeWidth={2.5} dot={{r:5,fill:"#0B6E8A",stroke:"#fff",strokeWidth:2}}/>
+            </LineChart>
+          </ResponsiveContainer>
+          <div style={{fontSize:11,color:"#8FA4B2",textAlign:"center",marginTop:4}}>BI-RADS o'zgarishi dinamikasi</div>
+        </Card>;
+      })()}
     </div>;
   }
 
@@ -1046,6 +1218,8 @@ export default function App(){
   const [lang,setLang]=useState("uz");
   const [dark,setDark]=useState(false);
   const [apiUrl,setApiUrl]=useState("https://breast-ai-backend.onrender.com");
+  const [doctorName,setDoctorName]=useState(()=>{try{return localStorage.getItem("doctorName")||"Dr.Rashidova Mahliyo"}catch{return "Dr.Rashidova Mahliyo"}});
+  const [doctorDept,setDoctorDept]=useState(()=>{try{return localStorage.getItem("doctorDept")||"Diagnostika bo'limi"}catch{return "Diagnostika bo'limi"}});
   const [tab,setTab]=useState("dashboard");
   const [selectedPatient,setSelectedPatient]=useState(null);
   const [newAnalysisMod,setNewAnalysisMod]=useState(null);
@@ -1076,7 +1250,7 @@ export default function App(){
   }
 
   return (
-    <AppCtx.Provider value={{lang,t,setLang,dark,setDark,apiUrl,setApiUrl,history,addToHistory}}>
+    <AppCtx.Provider value={{lang,t,setLang,dark,setDark,apiUrl,setApiUrl,history,addToHistory,doctorName,setDoctorName,doctorDept,setDoctorDept}}>
       <div style={{fontFamily:"system-ui,-apple-system,sans-serif",background:bg,minHeight:"100vh",display:"flex",flexDirection:"column",transition:"background .3s"}}>
         <div style={{background:hbg,borderBottom:`1px solid ${hborder}`,padding:"13px 18px",display:"flex",alignItems:"center",gap:10,position:"sticky",top:0,zIndex:100,transition:"background .3s"}}>
           <div style={{width:32,height:32,borderRadius:10,background:"#0B6E8A",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:13,color:"#fff"}}>B</div>
