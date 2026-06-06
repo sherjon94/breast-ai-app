@@ -546,10 +546,7 @@ function NewAnalysis({initialModality="uzi",onBack}){
     {analyzed&&<Card style={{marginBottom:14,background:bg,borderColor:color+"55"}}>
       <div style={{fontSize:12,color:ts,marginBottom:10,display:"flex",alignItems:"center",gap:6}}>
         ✨ {t.newAnal.resultLabel}
-        {analyzed&&apiResult
-          ?<span style={{fontSize:10,padding:"2px 7px",borderRadius:5,background:"#EAF3DE",color:"#2D9E6B",fontWeight:600}}>🔗 Real AI</span>
-          :<span style={{fontSize:10,padding:"2px 7px",borderRadius:5,background:"#F0F0F0",color:"#8FA4B2",fontWeight:600}}>📊 Local</span>
-        }
+        {analyzed&&apiResult&&<span style={{fontSize:10,padding:"2px 7px",borderRadius:5,background:"#E6F1FB",color:"#0B6E8A",fontWeight:600}}>🔗 Backend</span>}
       </div>
       {patientName&&<div style={{fontSize:13,fontWeight:600,color:tx,marginBottom:8}}>👤 {patientName}{patientAge?`, ${patientAge} yosh`:""}</div>}
       <Badge cat={cat}/>
@@ -579,48 +576,21 @@ function NewAnalysis({initialModality="uzi",onBack}){
         };
         const body = mod==="uzi"?uziBody : mod==="mammo"?mammoBody : {uzi:uziBody,mammo:mammoBody};
 
-        // Agar rasm yuklangan bo'lsa — image endpoint ishlatamiz
-        if(uploadedFile){
-          const formData = new FormData();
-          formData.append("file", uploadedFile);
-          const imgRes = await fetch(`${apiUrl}/api/analyze/image`, {
-            method:"POST",
-            body: formData,
-            signal: AbortSignal.timeout(30000)
-          });
-          if(imgRes.ok){
-            const imgData = await imgRes.json();
-            finalCat = imgData.birads_category || finalCat;
-            finalConf = imgData.confidence || finalConf;
-            apiUsed = true;
-          } else if(imgRes.status===422){
-            const errData = await imgRes.json();
-            setUploadError(errData.detail?.message || "Noto'g'ri rasm! UZI yoki mammografiya rasmi yuklang.");
-            setLoading(false);
-            return;
-          }
-        } else {
-          // Rasm yuklanmagan — xususiyatlar bo'yicha tahlil
-          const res = await fetch(`${apiUrl}/api/analyze/${endpoint}`, {
-            method:"POST",
-            headers:{"Content-Type":"application/json"},
-            body: JSON.stringify(body),
-            signal: AbortSignal.timeout(20000)
-          });
-          if(res.ok){
-            const data = await res.json();
-            finalCat = data.category;
-            finalConf = data.confidence;
-            apiUsed = true;
-            setApiResult(data);
-          }
+        // Faqat xususiyatlar asosida rule-based tahlil
+        const res = await fetch(`${apiUrl}/api/analyze/${endpoint}`, {
+          method:"POST",
+          headers:{"Content-Type":"application/json"},
+          body: JSON.stringify(body),
+          signal: AbortSignal.timeout(20000)
+        });
+        if(res.ok){
+          const data = await res.json();
+          finalCat = data.category;
+          finalConf = data.confidence;
+          apiUsed = true;
+          setApiResult(data);
         }
       } catch(e){
-        if(e.message && e.message.includes("422")){
-          setUploadError("Noto'g'ri rasm! UZI yoki mammografiya rasmi yuklang.");
-          setLoading(false);
-          return;
-        }
         console.log("Backend ulanmadi, local hisoblash ishlatildi:", e.message);
       }
 
