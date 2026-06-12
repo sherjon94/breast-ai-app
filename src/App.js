@@ -1254,8 +1254,8 @@ function Statistics(){
 function Settings(){
   const {lang,t,setLang,dark,setDark,apiUrl,setApiUrl,doctorName,setDoctorName,doctorDept,setDoctorDept,logout,showAllDoctors,setShowAllDoctors,isAdmin}=useApp();
   const s=t.settings;
-  const [notif,setNotif]=useState(true);
-  const [auto,setAuto]=useState(false);
+  const [notif,setNotif]=useState(()=>{try{return localStorage.getItem("breastai_notif")!=="0"}catch{return true}});
+  const [auto,setAuto]=useState(()=>{try{return localStorage.getItem("breastai_auto")==="1"}catch{return false}});
   const [editApi,setEditApi]=useState(false);
   const [toast,setToast]=useState(null);
 
@@ -1377,8 +1377,8 @@ function Settings(){
     {isAdmin&&<AdminPanel/>}
 
     <SSection title={s.sectionApp}>
-      <SRow label={s.notif} icon="🔔" right={<Toggle value={notif} onChange={v=>{setNotif(v);toast2(v?s.toastNotifOn:s.toastNotifOff,v?"success":"info");}}/>}/>
-      <SRow label={s.autoAnalysis} icon="⚡" right={<Toggle value={auto} onChange={v=>{setAuto(v);toast2(v?s.toastAutoOn:s.toastAutoOff,v?"success":"info");}}/>}/>
+      <SRow label={s.notif} icon="🔔" right={<Toggle value={notif} onChange={v=>{setNotif(v);try{localStorage.setItem("breastai_notif",v?"1":"0");}catch{}toast2(v?s.toastNotifOn:s.toastNotifOff,v?"success":"info");}}/>}/>
+      <SRow label={s.autoAnalysis} icon="⚡" right={<Toggle value={auto} onChange={v=>{setAuto(v);try{localStorage.setItem("breastai_auto",v?"1":"0");}catch{}toast2(v?s.toastAutoOn:s.toastAutoOff,v?"success":"info");}}/>}/>
       <SRow label={s.darkMode} icon="🌙" right={<Toggle value={dark} onChange={v=>{setDark(v);toast2(s.toastDark,"success");}}/>}/>
       <SRow label={s.lang} icon="🌐" right={
         <select value={lang} onChange={e=>{setLang(e.target.value);toast2(s.toastLang,"success");}}
@@ -1878,8 +1878,10 @@ function AdminPanel(){
 
 // ─── APP ──────────────────────────────────────────────────────────────────────
 export default function App(){
-  const [lang,setLang]=useState("uz");
-  const [dark,setDark]=useState(false);
+  const [lang,setLang]=useState(()=>{try{return localStorage.getItem("breastai_lang")||"uz"}catch{return "uz"}});
+  const [dark,setDark]=useState(()=>{try{return localStorage.getItem("breastai_dark")==="1"}catch{return false}});
+  useEffect(()=>{try{localStorage.setItem("breastai_lang",lang)}catch{}},[lang]);
+  useEffect(()=>{try{localStorage.setItem("breastai_dark",dark?"1":"0")}catch{}},[dark]);
   const [apiUrl,setApiUrlRaw]=useState(()=>{try{return localStorage.getItem("breastai_apiUrl")||"https://breast-ai-backend.onrender.com"}catch{return "https://breast-ai-backend.onrender.com"}});
   const setApiUrl=(u)=>{setApiUrlRaw(u);try{localStorage.setItem("breastai_apiUrl",u);}catch{}};
   // Auth (backend: token + user)
@@ -1890,7 +1892,8 @@ export default function App(){
   const doctorName=user?user.name:"";
   const doctorDept=user?(user.specialization||user.clinic||""):"";
   const isAdmin=user?user.role==="admin":false;
-  const [showAllDoctors,setShowAllDoctors]=useState(false);
+  const [showAllDoctors,setShowAllDoctorsRaw]=useState(()=>{try{return localStorage.getItem("breastai_showAll")==="1"}catch{return false}});
+  const setShowAllDoctors=(v)=>{setShowAllDoctorsRaw(v);try{localStorage.setItem("breastai_showAll",v?"1":"0");}catch{}};
   function onAuth(a){ setAuth(a); try{localStorage.setItem("breastai_auth",JSON.stringify(a));}catch{} }
   function setAuthUser(patch){ setAuth(a=>{const na={...a,user:{...a.user,...patch}}; try{localStorage.setItem("breastai_auth",JSON.stringify(na));}catch{} return na;}); }
   function setDoctorName(n){ setAuthUser({name:n}); }
