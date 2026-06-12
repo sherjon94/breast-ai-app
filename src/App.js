@@ -20,6 +20,7 @@ const T = {
     op:{ title:"Operating point (qaror chegarasi)", screening:"Skrining", balanced:"Muvozanat", confirm:"Tasdiqlash", screeningDesc:"Yuqori sezgirlik — saratonni o'tkazib yubormaslik", confirmDesc:"Yuqori spesifiklik — kam yolg'on signal", flagged:"⚠️ Tekshirish kerak", notFlagged:"Chegaradan past" },
     cls:{ normal:"Normal", benign:"Benign", malignant:"Malignant" },
     explain:{ btn:"🔥 Diqqat xaritasi", btnSeg:"✂️ Segmentatsiya", loading:"⏳ Hisoblanmoqda...", title:"AI diqqat xaritasi", desc:"Qizil-sariq hududlar — AI qarorida eng muhim sohalar (occlusion sensitivity)", segTitle:"O'simta segmentatsiyasi", segNote:"Taxminiy klassik usul (Otsu)", notFound:"O'choq topilmadi", diameter:"Ekvivalent diametr", areaPct:"Maydon ulushi" },
+    confLvl:{ high:"Yuqori ishonch", med:"O'rta ishonch", low:"Past ishonch", marginPre:"", marginPost:"farq bilan" },
     followup:{ title:"📅 AI tavsiya — qayta ko'rik", now:"Tezkor — biopsi/onkolog zudlik bilan", months:"oydan keyin", next:"Keyingi ko'rik", phone:"Telefon raqami", phonePh:"+998 90 123 45 67", remindTitle:"🔔 Ko'rik vaqti kelgan bemorlar", remindEmpty:"Hozircha ko'rik vaqti kelgan bemor yo'q", call:"📞 Qo'ng'iroq", overdue:"Muddati o'tgan", soon:"Yaqinlashmoqda", daysLeft:"kun qoldi", daysOver:"kun o'tdi" },
     login:{ subtitle:"Sut bezi diagnostika tizimi", loginTab:"Kirish", registerTab:"Ro'yxatdan o'tish", phone:"Telefon raqami", password:"Parol", name:"F.I.O.", specialization:"Mutaxassislik", clinic:"Klinika", license:"Litsenziya/diplom raqami", phonePh:"+998 90 123 45 67", namePh:"Dr. Familiya Ism Otasining ismi", passPh:"Kamida 4 belgi", specPh:"Masalan: Radiolog, Onkolog", clinicPh:"Klinika/shifoxona nomi", licensePh:"Litsenziya yoki diplom raqami", enter:"Kirish", register:"Ro'yxatdan o'tish", pendingMsg:"✓ Ro'yxatdan o'tdingiz! Admin hisobingizni tasdiqlagandan so'ng kirishingiz mumkin.", adminFirst:"Birinchi foydalanuvchi avtomatik ADMIN bo'ladi", logout:"Chiqish", myPatients:"Faqat mening bemorlarim", allPatients:"Barcha shifokorlar", adminPanel:"Admin — shifokorlar", approve:"Tasdiqlash", revoke:"Bekor", approved:"Tasdiqlangan", pending:"Kutilmoqda", role:"Rol", err:"Xatolik yuz berdi", reports:"Muammo xabarlari", noReports:"Xabarlar yo'q", resolve:"Hal qilindi", resolved:"Hal qilingan" },
   },
@@ -40,6 +41,7 @@ const T = {
     op:{ title:"Operating point (порог решения)", screening:"Скрининг", balanced:"Баланс", confirm:"Подтверждение", screeningDesc:"Высокая чувствительность — не пропустить рак", confirmDesc:"Высокая специфичность — меньше ложных тревог", flagged:"⚠️ Требует проверки", notFlagged:"Ниже порога" },
     cls:{ normal:"Normal", benign:"Benign", malignant:"Malignant" },
     explain:{ btn:"🔥 Карта внимания", btnSeg:"✂️ Сегментация", loading:"⏳ Вычисляется...", title:"Карта внимания ИИ", desc:"Красно-жёлтые зоны — самые важные области для решения ИИ (occlusion sensitivity)", segTitle:"Сегментация образования", segNote:"Приближённый классический метод (Otsu)", notFound:"Очаг не найден", diameter:"Эквивалентный диаметр", areaPct:"Доля площади" },
+    confLvl:{ high:"Высокая уверенность", med:"Средняя уверенность", low:"Низкая уверенность", marginPre:"разница", marginPost:"в пользу" },
     followup:{ title:"📅 ИИ рекомендация — повторный осмотр", now:"Срочно — биопсия/онколог немедленно", months:"мес. спустя", next:"Следующий осмотр", phone:"Номер телефона", phonePh:"+998 90 123 45 67", remindTitle:"🔔 Пациенты на повторный осмотр", remindEmpty:"Пока нет пациентов на осмотр", call:"📞 Позвонить", overdue:"Просрочено", soon:"Приближается", daysLeft:"дней осталось", daysOver:"дней прошло" },
     login:{ subtitle:"Система диагностики груди", loginTab:"Вход", registerTab:"Регистрация", phone:"Номер телефона", password:"Пароль", name:"Ф.И.О.", specialization:"Специализация", clinic:"Клиника", license:"Номер лицензии/диплома", phonePh:"+998 90 123 45 67", namePh:"Др. Фамилия Имя Отчество", passPh:"Минимум 4 символа", specPh:"Например: Радиолог, Онколог", clinicPh:"Название клиники/больницы", licensePh:"Номер лицензии или диплома", enter:"Войти", register:"Зарегистрироваться", pendingMsg:"✓ Вы зарегистрированы! Вход возможен после подтверждения администратором.", adminFirst:"Первый пользователь автоматически становится АДМИНОМ", logout:"Выйти", myPatients:"Только мои пациенты", allPatients:"Все врачи", adminPanel:"Админ — врачи", approve:"Подтвердить", revoke:"Отменить", approved:"Подтверждён", pending:"Ожидает", role:"Роль", err:"Произошла ошибка", reports:"Сообщения о проблемах", noReports:"Нет сообщений", resolve:"Решено", resolved:"Решено" },
   },
@@ -60,6 +62,7 @@ const T = {
     op:{ title:"Operating point (decision threshold)", screening:"Screening", balanced:"Balanced", confirm:"Confirmation", screeningDesc:"High sensitivity — don't miss cancer", confirmDesc:"High specificity — fewer false alarms", flagged:"⚠️ Needs review", notFlagged:"Below threshold" },
     cls:{ normal:"Normal", benign:"Benign", malignant:"Malignant" },
     explain:{ btn:"🔥 Attention Map", btnSeg:"✂️ Segmentation", loading:"⏳ Computing...", title:"AI Attention Map", desc:"Red-yellow regions — most important areas for the AI decision (occlusion sensitivity)", segTitle:"Lesion Segmentation", segNote:"Approximate classical method (Otsu)", notFound:"No lesion found", diameter:"Equivalent diameter", areaPct:"Area fraction" },
+    confLvl:{ high:"High confidence", med:"Medium confidence", low:"Low confidence", marginPre:"", marginPost:"margin for" },
     followup:{ title:"📅 AI recommendation — follow-up", now:"Urgent — biopsy/oncologist immediately", months:"months later", next:"Next checkup", phone:"Phone number", phonePh:"+998 90 123 45 67", remindTitle:"🔔 Patients due for checkup", remindEmpty:"No patients due for checkup yet", call:"📞 Call", overdue:"Overdue", soon:"Soon", daysLeft:"days left", daysOver:"days over" },
     login:{ subtitle:"Breast diagnostic system", loginTab:"Sign in", registerTab:"Register", phone:"Phone number", password:"Password", name:"Full name", specialization:"Specialization", clinic:"Clinic", license:"License/diploma number", phonePh:"+998 90 123 45 67", namePh:"Dr. Last First Middle", passPh:"At least 4 characters", specPh:"e.g. Radiologist, Oncologist", clinicPh:"Clinic/hospital name", licensePh:"License or diploma number", enter:"Sign in", register:"Register", pendingMsg:"✓ Registered! You can sign in after the admin approves your account.", adminFirst:"The first user automatically becomes ADMIN", logout:"Log out", myPatients:"Only my patients", allPatients:"All doctors", adminPanel:"Admin — doctors", approve:"Approve", revoke:"Revoke", approved:"Approved", pending:"Pending", role:"Role", err:"An error occurred", reports:"Issue reports", noReports:"No reports", resolve:"Resolve", resolved:"Resolved" },
   }
@@ -793,6 +796,24 @@ function NewAnalysis({initialModality="uzi",onBack}){
       {apiResult&&apiResult.operating_point!=null&&<div style={{marginTop:8,fontSize:12,fontWeight:600,color:apiResult.flagged_malignant?"#D63B3B":"#2D9E6B"}}>
         {apiResult.flagged_malignant?t.op.flagged:t.op.notFlagged} (OP={apiResult.operating_point})
       </div>}
+      {/* Ishonch darajasi + top-2 farqi */}
+      {result&&(()=>{
+        const c=result.conf;
+        const lvl=c>=0.75?["high","#2D9E6B"]:c>=0.5?["med","#BA7517"]:["low","#E86B2A"];
+        let marginTxt=null;
+        if(apiResult&&apiResult.class_probabilities){
+          const sorted=Object.entries(apiResult.class_probabilities).sort((a,b)=>b[1]-a[1]);
+          if(sorted.length>=2){
+            const m=Math.round((sorted[0][1]-sorted[1][1])*100);
+            const topCls=(t.cls&&t.cls[sorted[0][0]])||sorted[0][0];
+            marginTxt=`${t.confLvl.marginPre} ${m}% ${t.confLvl.marginPost} ${topCls}`.trim();
+          }
+        }
+        return <div style={{marginTop:8,display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
+          <span style={{fontSize:11,fontWeight:700,color:lvl[1],background:lvl[1]+"1A",padding:"3px 9px",borderRadius:6}}>{t.confLvl[lvl[0]]} · {Math.round(c*100)}%</span>
+          {marginTxt&&<span style={{fontSize:11,color:ts}}>{marginTxt}</span>}
+        </div>;
+      })()}
       {ins&&<div style={{marginTop:10,padding:"8px 12px",background:"#EAF3DE",borderRadius:8,fontSize:12,color:"#2D9E6B",fontWeight:600}}>🎯 {t.newAnal.inSituNote}</div>}
       {/* AI qayta ko'rik tavsiyasi */}
       {(()=>{const fm=followupMonths(cat);const nd=computeNextCheckup(cat);return (
