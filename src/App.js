@@ -16,8 +16,11 @@ const T = {
     settings:{ title:"Sozlamalar", editProfile:"Tahrirlash", save:"Saqlash", cancel:"Bekor", namePlaceholder:"F.I.O.", deptPlaceholder:"Bo'lim nomi", sectionApp:"Ilova", sectionModel:"AI Model", sectionData:"Ma'lumotlar", sectionAbout:"Ilova haqida", notif:"Bildirishnomalar", autoAnalysis:"Avtomat tahlil", darkMode:"Qorong'i rejim", lang:"Til", modelVersion:"Model versiyasi", apiEndpoint:"API endpoint", backendStatus:"Backend holati", checkApi:"Tekshirish", checking:"⏳ Tekshirilmoqda...", connected:"✓ Ulangan", notConnected:"✗ Ulanmadi", pdfReport:"PDF hisobot", backup:"Zaxiralash", clearCache:"Keshni tozalash", export:"Eksport", backupSave:"Saqlash", clear:"Tozalash", version:"Versiya", license:"Litsenziya", report:"Muammo bildirish", send:"Yuborish", licenseVal:"Tadqiqot maqsadida", disclaimer:"⚠️ Bu ilova faqat tadqiqot maqsadida. Klinik qarorlar uchun mutaxassis ko'rigi zarur.", toastNotifOn:"Bildirishnomalar yoqildi ✓", toastNotifOff:"O'chirildi", toastAutoOn:"Avtomat tahlil yoqildi ✓", toastAutoOff:"O'chirildi", toastDark:"Qorong'i rejim o'zgartirildi ✓", toastSaved:"Profil saqlandi ✓", toastApi:"Endpoint saqlandi ✓", toastBackend:"Backend ulanmadi — mock rejim", toastPdf:"PDF hisobot tayyorlanmoqda...", toastCache:"Kesh tozalandi ✓", toastBackup:"Zaxira yaratildi ✓", toastReport:"Yuborildi! Rahmat ✓", toastLang:"Til o'zgartirildi ✓", pdfModalTitle:"PDF Hisobot", pdfModalDesc:"Barcha bemorlar ma'lumotlari PDF formatda yuklab olinadi.", pdfGenerate:"PDF Yaratish", backupModalTitle:"Ma'lumotlarni Zaxiralash", backupModalDesc:"Barcha tahlil natijalari JSON formatda saqlangan.", backupDownload:"JSON Yuklab olish", reportModalTitle:"Muammo Bildirish", reportModalDesc:"Muammoni ta'riflab yozing — tezda ko'rib chiqamiz.", reportPlaceholder:"Muammo ta'rifi...", reportSend:"Yuborish", close:"Yopish" },
     aiConf:"AI ishonch", inSituBadge:"in situ", age:"yosh",
     banner:{ demo:"⚠️ DEMO REJIM — AI model yuklanmagan, natijalar tasodifiy! Klinik foydalanish taqiqlanadi.", offline:"📡 Backend bilan aloqa yo'q — natijalar lokal qoidalar asosida hisoblanadi." },
-    metrics:{ title:"🧪 AI model sifati (BUSI test)", acc:"Aniqlik", sens:"Sezgirlik", spec:"Spesifiklik", auc:"AUC", f1:"F1", roc:"ROC egri chizig'i", cm:"Confusion matrix", noData:"Model metrikalari hali hisoblanmagan", hint:"Backend papkada ishga tushiring: python evaluate.py <BUSI_test_papka>", real:"Haqiqiy", pred:"Bashorat", benign:"Benign", malignant:"Malignant", nTest:"Test rasmlar" },
+    metrics:{ title:"🧪 AI model sifati (BUSI test)", acc:"Aniqlik", sens:"Sezgirlik", spec:"Spesifiklik", auc:"AUC", f1:"F1", roc:"ROC egri chizig'i", cm:"Confusion matrix", noData:"Model metrikalari hali hisoblanmagan", hint:"Backend papkada ishga tushiring: python evaluate.py <BUSI_test_papka>", real:"Haqiqiy", pred:"Bashorat", benign:"Benign", malignant:"Malignant", nTest:"Test rasmlar", cvTitle:"5-fold cross-validation (95% CI)", compTitle:"Arxitektura taqqoslovi", arch:"Arxitektura", cancerNote:"Saraton-aniqlash (malignant vs qolganlar)" },
+    op:{ title:"Operating point (qaror chegarasi)", screening:"Skrining", balanced:"Muvozanat", confirm:"Tasdiqlash", screeningDesc:"Yuqori sezgirlik — saratonni o'tkazib yubormaslik", confirmDesc:"Yuqori spesifiklik — kam yolg'on signal", flagged:"⚠️ Tekshirish kerak", notFlagged:"Chegaradan past" },
+    cls:{ normal:"Normal", benign:"Benign", malignant:"Malignant" },
     explain:{ btn:"🔥 Diqqat xaritasi", btnSeg:"✂️ Segmentatsiya", loading:"⏳ Hisoblanmoqda...", title:"AI diqqat xaritasi", desc:"Qizil-sariq hududlar — AI qarorida eng muhim sohalar (occlusion sensitivity)", segTitle:"O'simta segmentatsiyasi", segNote:"Taxminiy klassik usul (Otsu)", notFound:"O'choq topilmadi", diameter:"Ekvivalent diametr", areaPct:"Maydon ulushi" },
+    login:{ title:"Tizimga kirish", subtitle:"Shifokor profilini tanlang yoki yangi yarating", name:"F.I.O.", dept:"Bo'lim", enter:"Kirish", newDoc:"+ Yangi shifokor", existing:"Mavjud profillar", namePh:"Dr. Familiya Ism", deptPh:"Diagnostika bo'limi", switch:"Profilni almashtirish", logout:"Chiqish", myPatients:"Faqat mening bemorlarim", allPatients:"Barcha shifokorlar" },
   },
   ru: {
     appName:"Breast AI", appSub:"Мультимодальная диагностика", newAnalysis:"+ Новый анализ", back:"← Назад",
@@ -32,8 +35,11 @@ const T = {
     settings:{ title:"Настройки", editProfile:"Изменить", save:"Сохранить", cancel:"Отмена", namePlaceholder:"Ф.И.О.", deptPlaceholder:"Отдел", sectionApp:"Приложение", sectionModel:"ИИ Модель", sectionData:"Данные", sectionAbout:"О приложении", notif:"Уведомления", autoAnalysis:"Авто-анализ", darkMode:"Тёмная тема", lang:"Язык", modelVersion:"Версия модели", apiEndpoint:"API эндпоинт", backendStatus:"Статус бэкенда", checkApi:"Проверить", checking:"⏳ Проверка...", connected:"✓ Подключено", notConnected:"✗ Нет связи", pdfReport:"PDF отчёт", backup:"Резервная копия", clearCache:"Очистить кэш", export:"Экспорт", backupSave:"Сохранить", clear:"Очистить", version:"Версия", license:"Лицензия", report:"Сообщить об ошибке", send:"Отправить", licenseVal:"Для исследований", disclaimer:"⚠️ Только для исследовательских целей. Клинические решения требуют консультации специалиста.", toastNotifOn:"Уведомления включены ✓", toastNotifOff:"Отключено", toastAutoOn:"Авто-анализ включён ✓", toastAutoOff:"Отключено", toastDark:"Тёмная тема изменена ✓", toastSaved:"Профиль сохранён ✓", toastApi:"Эндпоинт сохранён ✓", toastBackend:"Бэкенд недоступен — режим mock", toastPdf:"Подготовка PDF...", toastCache:"Кэш очищен ✓", toastBackup:"Копия создана ✓", toastReport:"Отправлено! Спасибо ✓", toastLang:"Язык изменён ✓", pdfModalTitle:"PDF Отчёт", pdfModalDesc:"Данные всех пациентов будут экспортированы в PDF.", pdfGenerate:"Создать PDF", backupModalTitle:"Резервная копия", backupModalDesc:"Все результаты анализов сохранены в формате JSON.", backupDownload:"Скачать JSON", reportModalTitle:"Сообщить об ошибке", reportModalDesc:"Опишите проблему — мы рассмотрим её в ближайшее время.", reportPlaceholder:"Описание проблемы...", reportSend:"Отправить", close:"Закрыть" },
     aiConf:"Точность ИИ", inSituBadge:"in situ", age:"лет",
     banner:{ demo:"⚠️ ДЕМО-РЕЖИМ — ИИ модель не загружена, результаты случайны! Клиническое использование запрещено.", offline:"📡 Нет связи с бэкендом — результаты рассчитываются локально." },
-    metrics:{ title:"🧪 Качество ИИ модели (BUSI тест)", acc:"Точность", sens:"Чувствительность", spec:"Специфичность", auc:"AUC", f1:"F1", roc:"ROC-кривая", cm:"Матрица ошибок", noData:"Метрики модели ещё не рассчитаны", hint:"Запустите в папке бэкенда: python evaluate.py <папка_BUSI>", real:"Реальный", pred:"Прогноз", benign:"Benign", malignant:"Malignant", nTest:"Тестовых снимков" },
+    metrics:{ title:"🧪 Качество ИИ модели (BUSI тест)", acc:"Точность", sens:"Чувствительность", spec:"Специфичность", auc:"AUC", f1:"F1", roc:"ROC-кривая", cm:"Матрица ошибок", noData:"Метрики модели ещё не рассчитаны", hint:"Запустите в папке бэкенда: python evaluate.py <папка_BUSI>", real:"Реальный", pred:"Прогноз", benign:"Benign", malignant:"Malignant", nTest:"Тестовых снимков", cvTitle:"5-fold кросс-валидация (95% ДИ)", compTitle:"Сравнение архитектур", arch:"Архитектура", cancerNote:"Детекция рака (malignant vs остальные)" },
+    op:{ title:"Operating point (порог решения)", screening:"Скрининг", balanced:"Баланс", confirm:"Подтверждение", screeningDesc:"Высокая чувствительность — не пропустить рак", confirmDesc:"Высокая специфичность — меньше ложных тревог", flagged:"⚠️ Требует проверки", notFlagged:"Ниже порога" },
+    cls:{ normal:"Normal", benign:"Benign", malignant:"Malignant" },
     explain:{ btn:"🔥 Карта внимания", btnSeg:"✂️ Сегментация", loading:"⏳ Вычисляется...", title:"Карта внимания ИИ", desc:"Красно-жёлтые зоны — самые важные области для решения ИИ (occlusion sensitivity)", segTitle:"Сегментация образования", segNote:"Приближённый классический метод (Otsu)", notFound:"Очаг не найден", diameter:"Эквивалентный диаметр", areaPct:"Доля площади" },
+    login:{ title:"Вход в систему", subtitle:"Выберите профиль врача или создайте новый", name:"Ф.И.О.", dept:"Отдел", enter:"Войти", newDoc:"+ Новый врач", existing:"Существующие профили", namePh:"Др. Фамилия Имя", deptPh:"Отдел диагностики", switch:"Сменить профиль", logout:"Выйти", myPatients:"Только мои пациенты", allPatients:"Все врачи" },
   },
   en: {
     appName:"Breast AI", appSub:"Multimodal Diagnostic System", newAnalysis:"+ New Analysis", back:"← Back",
@@ -48,13 +54,16 @@ const T = {
     settings:{ title:"Settings", editProfile:"Edit", save:"Save", cancel:"Cancel", namePlaceholder:"Full name", deptPlaceholder:"Department", sectionApp:"Application", sectionModel:"AI Model", sectionData:"Data", sectionAbout:"About", notif:"Notifications", autoAnalysis:"Auto Analysis", darkMode:"Dark Mode", lang:"Language", modelVersion:"Model Version", apiEndpoint:"API Endpoint", backendStatus:"Backend Status", checkApi:"Check", checking:"⏳ Checking...", connected:"✓ Connected", notConnected:"✗ Not Connected", pdfReport:"PDF Report", backup:"Backup", clearCache:"Clear Cache", export:"Export", backupSave:"Save", clear:"Clear", version:"Version", license:"License", report:"Report Issue", send:"Send", licenseVal:"For research purposes", disclaimer:"⚠️ For research purposes only. Clinical decisions require specialist consultation.", toastNotifOn:"Notifications enabled ✓", toastNotifOff:"Disabled", toastAutoOn:"Auto analysis enabled ✓", toastAutoOff:"Disabled", toastDark:"Dark mode toggled ✓", toastSaved:"Profile saved ✓", toastApi:"Endpoint saved ✓", toastBackend:"Backend unavailable — mock mode", toastPdf:"Preparing PDF...", toastCache:"Cache cleared ✓", toastBackup:"Backup created ✓", toastReport:"Sent! Thank you ✓", toastLang:"Language changed ✓", pdfModalTitle:"PDF Report", pdfModalDesc:"All patient data will be exported to PDF format.", pdfGenerate:"Generate PDF", backupModalTitle:"Data Backup", backupModalDesc:"All analysis results saved in JSON format.", backupDownload:"Download JSON", reportModalTitle:"Report Issue", reportModalDesc:"Describe the problem — we'll review it shortly.", reportPlaceholder:"Describe the issue...", reportSend:"Send", close:"Close" },
     aiConf:"AI Confidence", inSituBadge:"in situ", age:"yrs",
     banner:{ demo:"⚠️ DEMO MODE — AI model not loaded, results are random! Not for clinical use.", offline:"📡 Backend unreachable — results computed locally." },
-    metrics:{ title:"🧪 AI Model Quality (BUSI test)", acc:"Accuracy", sens:"Sensitivity", spec:"Specificity", auc:"AUC", f1:"F1", roc:"ROC Curve", cm:"Confusion Matrix", noData:"Model metrics not computed yet", hint:"Run in backend folder: python evaluate.py <BUSI_test_dir>", real:"Actual", pred:"Predicted", benign:"Benign", malignant:"Malignant", nTest:"Test images" },
+    metrics:{ title:"🧪 AI Model Quality (BUSI test)", acc:"Accuracy", sens:"Sensitivity", spec:"Specificity", auc:"AUC", f1:"F1", roc:"ROC Curve", cm:"Confusion Matrix", noData:"Model metrics not computed yet", hint:"Run in backend folder: python evaluate.py <BUSI_test_dir>", real:"Actual", pred:"Predicted", benign:"Benign", malignant:"Malignant", nTest:"Test images", cvTitle:"5-fold cross-validation (95% CI)", compTitle:"Architecture comparison", arch:"Architecture", cancerNote:"Cancer detection (malignant vs rest)" },
+    op:{ title:"Operating point (decision threshold)", screening:"Screening", balanced:"Balanced", confirm:"Confirmation", screeningDesc:"High sensitivity — don't miss cancer", confirmDesc:"High specificity — fewer false alarms", flagged:"⚠️ Needs review", notFlagged:"Below threshold" },
+    cls:{ normal:"Normal", benign:"Benign", malignant:"Malignant" },
     explain:{ btn:"🔥 Attention Map", btnSeg:"✂️ Segmentation", loading:"⏳ Computing...", title:"AI Attention Map", desc:"Red-yellow regions — most important areas for the AI decision (occlusion sensitivity)", segTitle:"Lesion Segmentation", segNote:"Approximate classical method (Otsu)", notFound:"No lesion found", diameter:"Equivalent diameter", areaPct:"Area fraction" },
+    login:{ title:"Sign in", subtitle:"Select a doctor profile or create a new one", name:"Full name", dept:"Department", enter:"Sign in", newDoc:"+ New doctor", existing:"Existing profiles", namePh:"Dr. Last First", deptPh:"Diagnostics dept.", switch:"Switch profile", logout:"Log out", myPatients:"Only my patients", allPatients:"All doctors" },
   }
 };
 
 // ─── CONTEXT ──────────────────────────────────────────────────────────────────
-const AppCtx = createContext({ lang:"uz", t:T.uz, setLang:()=>{}, dark:false, setDark:()=>{}, apiUrl:"https://breast-ai-backend.onrender.com", setApiUrl:()=>{}, history:[], addToHistory:()=>{}, doctorName:"Dr.Rashidova Mahliyo", doctorDept:"Diagnostika bo'limi" });
+const AppCtx = createContext({ lang:"uz", t:T.uz, setLang:()=>{}, dark:false, setDark:()=>{}, apiUrl:"https://breast-ai-backend.onrender.com", setApiUrl:()=>{}, history:[], addToHistory:()=>{}, doctorName:"", doctorDept:"", doctorId:"", logout:()=>{}, showAllDoctors:false, setShowAllDoctors:()=>{} });
 function useApp(){ return useContext(AppCtx); }
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
@@ -63,6 +72,7 @@ const BB={1:"#EAF3DE",2:"#EAF3DE",3:"#FAEEDA",4:"#FAECE7",5:"#FCEBEB",6:"#FCEBEB
 const bc=(c)=>BC[c]||"#2D9E6B";
 const bb=(c)=>BB[c]||"#EAF3DE";
 const mc=(m)=>m==="uzi"?"#0B6E8A":m==="mammo"?"#6A3DAA":"#1A7A5E";
+const slug=(s)=>(s||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"")||"doctor";
 // ─── DOWNLOAD HELPER (data URI, works in sandbox) ────────────────────────────
 function dataDownload(content, filename){
   try {
@@ -82,6 +92,29 @@ function dataDownload(content, filename){
 }
 
 
+
+// Rasmni kichik thumbnail (base64 JPEG) ga aylantirish — localStorage va PDF uchun
+function fileToThumb(file, maxSize=320){
+  return new Promise((resolve)=>{
+    try{
+      const reader=new FileReader();
+      reader.onload=()=>{
+        const img=new Image();
+        img.onload=()=>{
+          const scale=Math.min(1, maxSize/Math.max(img.width,img.height));
+          const w=Math.round(img.width*scale), h=Math.round(img.height*scale);
+          const c=document.createElement("canvas"); c.width=w; c.height=h;
+          c.getContext("2d").drawImage(img,0,0,w,h);
+          try{ resolve(c.toDataURL("image/jpeg",0.6)); }catch{ resolve(null); }
+        };
+        img.onerror=()=>resolve(null);
+        img.src=reader.result;
+      };
+      reader.onerror=()=>resolve(null);
+      reader.readAsDataURL(file);
+    }catch{ resolve(null); }
+  });
+}
 
 // ─── UI PRIMITIVES ────────────────────────────────────────────────────────────
 function Card({children,style={}}){
@@ -157,7 +190,20 @@ function SSection({title,children}){
 
 
 // ─── PDF HISOBOT ──────────────────────────────────────────────────────────────
-function generatePDFReport(record, doctorName, doctorDept){
+function generatePDFReport(record, doctorName, doctorDept, images={}){
+  const imgOriginal = images.original || record.imageThumb || null;
+  const imgHeatmap = images.heatmap ? `data:image/png;base64,${images.heatmap}` : null;
+  const imgSeg = images.segmentation ? `data:image/png;base64,${images.segmentation}` : null;
+  const hasImages = imgOriginal || imgHeatmap || imgSeg;
+  const imagesHtml = hasImages ? `
+<div class="section">
+  <div class="section-title">🖼 Tasvirlar va AI tahlili</div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    ${imgOriginal?`<div style="flex:1;min-width:160px;text-align:center"><img src="${imgOriginal}" style="width:100%;border-radius:8px;border:1px solid #DDE6ED"/><div style="font-size:10px;color:#8FA4B2;margin-top:4px">Original tasvir</div></div>`:""}
+    ${imgHeatmap?`<div style="flex:1;min-width:160px;text-align:center"><img src="${imgHeatmap}" style="width:100%;border-radius:8px;border:1px solid #DDE6ED"/><div style="font-size:10px;color:#8FA4B2;margin-top:4px">AI diqqat xaritasi</div></div>`:""}
+    ${imgSeg?`<div style="flex:1;min-width:160px;text-align:center"><img src="${imgSeg}" style="width:100%;border-radius:8px;border:1px solid #DDE6ED"/><div style="font-size:10px;color:#8FA4B2;margin-top:4px">Segmentatsiya</div></div>`:""}
+  </div>
+</div>` : "";
   const bm = T.uz.birads[record.birads] || T.uz.birads[2];
   const color = record.birads >= 4 ? "#D63B3B" : record.birads === 3 ? "#BA7517" : "#2D9E6B";
   const date = new Date(record.date).toLocaleDateString("uz-UZ", {year:"numeric",month:"long",day:"numeric"});
@@ -227,6 +273,8 @@ function generatePDFReport(record, doctorName, doctorDept){
   <div style="font-size:13px;font-weight:600;color:${color}">${Math.round(record.confidence*100)}%</div>
   ${record.isInSitu?`<div style="margin-top:8px;background:#EAF3DE;border-radius:6px;padding:6px;font-size:11px;color:#2D9E6B">🎯 In situ ehtimoli: o’lcham ≤10mm</div>`:""}
 </div>
+
+${imagesHtml}
 
 ${record.shape||record.echo?`
 <div class="section">
@@ -505,7 +553,7 @@ function PatientsList({onPatient}){
 
 // ─── NEW ANALYSIS ─────────────────────────────────────────────────────────────
 function NewAnalysis({initialModality="uzi",onBack}){
-  const {t,dark,addToHistory,apiUrl}=useApp();
+  const {t,dark,addToHistory,apiUrl,doctorName,doctorDept}=useApp();
   const [mod,setMod]=useState(initialModality);
   const [shape,setShape]=useState("oval");
   const [margin,setMargin]=useState("circumscribed");
@@ -523,10 +571,12 @@ function NewAnalysis({initialModality="uzi",onBack}){
   const [uploadError,setUploadError]=useState(null);
   const [apiResult,setApiResult]=useState(null);
   const [result,setResult]=useState(null); // {cat, sub, conf} — ko'rsatiladigan yakuniy natija
+  const [opThreshold,setOpThreshold]=useState(0.5); // operating point
   const [heatmap,setHeatmap]=useState(null);
   const [heatLoading,setHeatLoading]=useState(false);
   const [segResult,setSegResult]=useState(null);
   const [segLoading,setSegLoading]=useState(false);
+  const [savedRecord,setSavedRecord]=useState(null);
   const [patientName,setPatientName]=useState("");
   const [patientAge,setPatientAge]=useState("");
   const [patientGender,setPatientGender]=useState("Ayol");
@@ -648,6 +698,20 @@ function NewAnalysis({initialModality="uzi",onBack}){
         </div>}
     </div>
     {uploadError&&<div style={{fontSize:12,color:"#D63B3B",background:"#FCEBEB",borderRadius:10,padding:"8px 14px",marginTop:-10,marginBottom:10}}>⚠️ {uploadError}</div>}
+    {uploadedFile&&<Card style={{marginBottom:14}}>
+      <div style={{fontSize:12,color:ts,marginBottom:8}}>🎚 {t.op.title}</div>
+      <div style={{display:"flex",gap:6}}>
+        {[["screening",0.3,t.op.screening],["balanced",0.5,t.op.balanced],["confirm",0.7,t.op.confirm]].map(([k,v,label])=>(
+          <button key={k} onClick={()=>{setOpThreshold(v);setAnalyzed(false);}}
+            style={{flex:1,padding:"8px 6px",borderRadius:10,fontSize:12,fontWeight:600,cursor:"pointer",
+              border:opThreshold===v?"1.5px solid #0B6E8A":`1px solid ${dark?"#2E3A47":"#DDE6ED"}`,
+              background:opThreshold===v?"#E6F1FB":dark?"#263040":"#FAFAFA",color:opThreshold===v?"#0B6E8A":ts}}>{label}</button>
+        ))}
+      </div>
+      <div style={{fontSize:11,color:"#8FA4B2",marginTop:6}}>
+        {opThreshold===0.3?t.op.screeningDesc:opThreshold===0.7?t.op.confirmDesc:`${t.op.screening} ↔ ${t.op.confirm}`} · threshold={opThreshold}
+      </div>
+    </Card>}
     {(mod==="uzi"||mod==="combined")&&<Card style={{marginBottom:14}}>
       <div style={{fontSize:14,fontWeight:700,color:"#0B6E8A",marginBottom:14}}>🌊 {t.newAnal.uziFeatures}</div>
       <div style={{marginBottom:14}}>
@@ -691,9 +755,14 @@ function NewAnalysis({initialModality="uzi",onBack}){
       {patientName&&<div style={{fontSize:13,fontWeight:600,color:tx,marginBottom:8}}>👤 {patientName}{patientAge?`, ${patientAge} yosh`:""}</div>}
       <Badge cat={cat} sub={result?.sub}/>
       <div style={{fontSize:13,color:ts,marginTop:8}}>{(apiResult&&(apiResult.recommendation))||bm.rec}</div>
-      {apiResult&&apiResult.class_probabilities&&<div style={{display:"flex",gap:12,marginTop:10,fontSize:12}}>
-        <span style={{color:"#2D9E6B",fontWeight:600}}>Benign: {Math.round(apiResult.class_probabilities.benign*100)}%</span>
-        <span style={{color:"#D63B3B",fontWeight:600}}>Malignant: {Math.round(apiResult.class_probabilities.malignant*100)}%</span>
+      {apiResult&&apiResult.class_probabilities&&<div style={{display:"flex",gap:12,marginTop:10,fontSize:12,flexWrap:"wrap"}}>
+        {Object.entries(apiResult.class_probabilities).map(([cls,p])=>{
+          const ccol=cls==="malignant"?"#D63B3B":cls==="benign"?"#2D9E6B":"#0B6E8A";
+          return <span key={cls} style={{color:ccol,fontWeight:600}}>{(t.cls&&t.cls[cls])||cls}: {Math.round(p*100)}%</span>;
+        })}
+      </div>}
+      {apiResult&&apiResult.operating_point!=null&&<div style={{marginTop:8,fontSize:12,fontWeight:600,color:apiResult.flagged_malignant?"#D63B3B":"#2D9E6B"}}>
+        {apiResult.flagged_malignant?t.op.flagged:t.op.notFlagged} (OP={apiResult.operating_point})
       </div>}
       {ins&&<div style={{marginTop:10,padding:"8px 12px",background:"#EAF3DE",borderRadius:8,fontSize:12,color:"#2D9E6B",fontWeight:600}}>🎯 {t.newAnal.inSituNote}</div>}
       <div style={{marginTop:12}}><ConfBar value={result?result.conf:0.88}/></div>
@@ -741,6 +810,10 @@ function NewAnalysis({initialModality="uzi",onBack}){
           </div>
           :<div style={{fontSize:12,color:"#8FA4B2"}}>{t.explain.notFound}</div>}
       </div>}
+      {savedRecord&&<button onClick={()=>generatePDFReport(savedRecord,doctorName,doctorDept,{heatmap,segmentation:segResult&&segResult.found?segResult.overlay_png_base64:null})}
+        style={{width:"100%",marginTop:14,padding:11,borderRadius:10,border:"1px solid #6A3DAA",background:"#EEEDFE",color:"#6A3DAA",fontWeight:700,fontSize:13,cursor:"pointer"}}>
+        📄 {t.detail.pdfExport}
+      </button>}
     </Card>}
     {!patientName.trim()&&!analyzed&&<div style={{fontSize:12,color:"#E86B2A",textAlign:"center",marginBottom:8}}>⚠️ Bemor F.I.O. ni kiriting</div>}
     <button onClick={async()=>{
@@ -770,7 +843,7 @@ function NewAnalysis({initialModality="uzi",onBack}){
           // Rasm yuklangan — AI model bilan tekshirish
           const formData = new FormData();
           formData.append("file", uploadedFile);
-          const imgRes = await fetch(`${apiUrl}/api/analyze/image`,{
+          const imgRes = await fetch(`${apiUrl}/api/analyze/image?threshold=${opThreshold}`,{
             method:"POST", body:formData, signal:AbortSignal.timeout(40000)
           });
           if(imgRes.ok){
@@ -809,10 +882,11 @@ function NewAnalysis({initialModality="uzi",onBack}){
         console.log("Backend ulanmadi, local hisoblash ishlatildi:", e.message);
       }
 
+      const thumb = uploadedFile ? await fileToThumb(uploadedFile) : null;
       setLoading(false);
       setAnalyzed(true);
       setResult({cat:finalCat, sub:finalSub, conf:finalConf});
-      addToHistory({
+      const record = {
         id: Date.now().toString(),
         date: new Date().toISOString(),
         patientName, patientAge, patientGender, patientNotes,
@@ -821,6 +895,7 @@ function NewAnalysis({initialModality="uzi",onBack}){
         biradsSub: finalSub,
         confidence: finalConf,
         apiUsed,
+        imageThumb: thumb,
         sizeA: mod!=="mammo"?sizeA:null,
         sizeB: mod!=="mammo"?sizeB:null,
         isInSitu: mod!=="mammo"&&sizeA<=10&&sizeB<=10,
@@ -830,7 +905,9 @@ function NewAnalysis({initialModality="uzi",onBack}){
         density: mod!=="uzi"?density:null,
         calcification: mod!=="uzi"?calcification:null,
         distortion: mod!=="uzi"?distortion:null,
-      });
+      };
+      setSavedRecord(record);
+      addToHistory(record);
     }}
       style={{width:"100%",padding:14,borderRadius:12,border:"none",background:loading?"#8FA4B2":"#0B6E8A",color:"#fff",fontWeight:700,fontSize:14,cursor:loading?"not-allowed":"pointer",transition:"background .2s"}}>
       {loading?t.newAnal.btnLoading:analyzed?t.newAnal.btnRetry:t.newAnal.btnStart}
@@ -1080,6 +1157,46 @@ function Statistics(){
               </tr>
             </tbody>
           </table>
+          {metrics.model&&<div style={{fontSize:11,color:"#8FA4B2",marginTop:8}}>📦 {metrics.model}{metrics.cancer_detection&&` · ${t.metrics.cancerNote}`}</div>}
+
+          {/* 5-fold cross-validation (95% CI) */}
+          {metrics.cross_validation&&<div style={{marginTop:18}}>
+            <div style={{fontSize:13,fontWeight:600,color:tx,marginBottom:8}}>📊 {t.metrics.cvTitle}</div>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(100px,1fr))",gap:8}}>
+              {[["auc",t.metrics.auc,"#E86B2A"],["sensitivity",t.metrics.sens,"#2D9E6B"],["specificity",t.metrics.spec,"#6A3DAA"],["accuracy",t.metrics.acc,"#0B6E8A"]].map(([k,l,c])=>{
+                const m=metrics.cross_validation[k]; if(!m)return null;
+                return <div key={k} style={{background:dark?"#263040":"#F7F9FC",borderRadius:10,padding:"8px 6px",textAlign:"center"}}>
+                  <div style={{fontSize:14,fontWeight:800,color:c}}>{(m.mean*100).toFixed(1)}<span style={{fontSize:10}}>±{(m.ci95*100).toFixed(1)}</span></div>
+                  <div style={{fontSize:10,color:"#8FA4B2",marginTop:2}}>{l}</div>
+                </div>;
+              })}
+            </div>
+          </div>}
+
+          {/* Arxitektura taqqoslovi */}
+          {metrics.architecture_comparison&&<div style={{marginTop:18}}>
+            <div style={{fontSize:13,fontWeight:600,color:tx,marginBottom:8}}>🏗 {t.metrics.compTitle}</div>
+            <table style={{width:"100%",borderCollapse:"collapse",fontSize:11}}>
+              <thead><tr style={{color:"#8FA4B2"}}>
+                <td style={{padding:"6px 8px",textAlign:"left"}}>{t.metrics.arch}</td>
+                <td style={{padding:"6px 4px",textAlign:"center"}}>{t.metrics.auc}</td>
+                <td style={{padding:"6px 4px",textAlign:"center"}}>{t.metrics.sens}</td>
+                <td style={{padding:"6px 4px",textAlign:"center"}}>{t.metrics.spec}</td>
+                <td style={{padding:"6px 4px",textAlign:"center"}}>{t.metrics.acc}</td>
+              </tr></thead>
+              <tbody>
+                {[...metrics.architecture_comparison].sort((a,b)=>b.auc-a.auc).map((r,i)=>(
+                  <tr key={r.arch} style={{borderTop:`1px solid ${dark?"#2E3A47":"#EEF3F8"}`,background:i===0?(dark?"#1E3329":"#EAF3DE"):"transparent"}}>
+                    <td style={{padding:"6px 8px",fontWeight:i===0?700:500,color:tx}}>{i===0?"🏆 ":""}{r.arch}</td>
+                    <td style={{padding:"6px 4px",textAlign:"center",fontWeight:700,color:"#E86B2A"}}>{(r.auc*100).toFixed(1)}</td>
+                    <td style={{padding:"6px 4px",textAlign:"center",color:tx}}>{(r.sensitivity*100).toFixed(0)}</td>
+                    <td style={{padding:"6px 4px",textAlign:"center",color:tx}}>{(r.specificity*100).toFixed(0)}</td>
+                    <td style={{padding:"6px 4px",textAlign:"center",color:tx}}>{(r.accuracy*100).toFixed(0)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>}
         </div>
         :<div style={{textAlign:"center",padding:"20px 10px",color:"#8FA4B2"}}>
           <div style={{fontSize:28,marginBottom:8}}>🧪</div>
@@ -1101,7 +1218,7 @@ function Statistics(){
 
 // ─── SETTINGS ─────────────────────────────────────────────────────────────────
 function Settings(){
-  const {lang,t,setLang,dark,setDark,apiUrl,setApiUrl,doctorName,setDoctorName,doctorDept,setDoctorDept}=useApp();
+  const {lang,t,setLang,dark,setDark,apiUrl,setApiUrl,doctorName,setDoctorName,doctorDept,setDoctorDept,logout,showAllDoctors,setShowAllDoctors}=useApp();
   const s=t.settings;
   const [notif,setNotif]=useState(true);
   const [auto,setAuto]=useState(false);
@@ -1220,6 +1337,7 @@ function Settings(){
           <div style={{flex:1}}><div style={{fontWeight:700,fontSize:15,color:tx}}>{doctorName}</div><div style={{fontSize:12,color:"#52687A"}}>{doctorDept}</div></div>
           <button onClick={()=>setEditDoc(true)} style={{padding:"6px 12px",borderRadius:8,border:"1px solid #DDE6ED",background:"#fff",fontSize:12,color:"#0B6E8A",fontWeight:600,cursor:"pointer"}}>{s.editProfile}</button>
         </div>}
+      {!editDoc&&<button onClick={logout} style={{width:"100%",marginTop:12,padding:10,borderRadius:10,border:"1px solid #FCEBEB",background:"#FCEBEB",color:"#D63B3B",fontWeight:600,fontSize:13,cursor:"pointer"}}>🚪 {t.login.logout}</button>}
     </Card>
 
     <SSection title={s.sectionApp}>
@@ -1233,6 +1351,7 @@ function Settings(){
           <option value="ru">Русский</option>
           <option value="en">English</option>
         </select>}/>
+      <SRow label={t.login.allPatients} icon="👥" right={<Toggle value={showAllDoctors} onChange={v=>{setShowAllDoctors(v);toast2(v?t.login.allPatients:t.login.myPatients,"info");}}/>}/>
     </SSection>
 
     <SSection title={s.sectionModel}>
@@ -1372,7 +1491,7 @@ function CompareScreen({onClose}){
 
 // ─── HISTORY SCREEN ───────────────────────────────────────────────────────────
 function HistoryScreen({forcedRecord=null,onBack=null}){
-  const {t,dark,history,doctorName,doctorDept,apiUrl}=useApp();
+  const {t,dark,history,doctorName,doctorDept,apiUrl,doctorId}=useApp();
   const [search,setSearch]=useState("");
   const [selected,setSelected]=useState(forcedRecord);
   const tx=dark?"#E8EFF5":"#0D1B2A", ts=dark?"#8FA4B2":"#52687A";
@@ -1388,10 +1507,14 @@ function HistoryScreen({forcedRecord=null,onBack=null}){
   }
 
   function clearHistory(){
-    if(window.confirm("Barcha tarixni o'chirishni tasdiqlaysizmi?")){
-      localStorage.removeItem("breastai_history");
-      // Backend bazani ham tozalash, keyin sahifani yangilash
-      fetch(`${apiUrl}/api/history`,{method:"DELETE",signal:AbortSignal.timeout(15000)})
+    if(window.confirm("Sizning barcha tahlil tarixingizni o'chirishni tasdiqlaysizmi?")){
+      // Faqat joriy shifokor yozuvlarini o'chirish (boshqalarniki qoladi)
+      try{
+        const all=JSON.parse(localStorage.getItem("breastai_history")||"[]");
+        const kept=all.filter(h=>h.doctorId&&h.doctorId!==doctorId);
+        localStorage.setItem("breastai_history",JSON.stringify(kept));
+      }catch{}
+      fetch(`${apiUrl}/api/history?doctor=${encodeURIComponent(doctorId)}`,{method:"DELETE",signal:AbortSignal.timeout(15000)})
         .catch(()=>{})
         .finally(()=>window.location.reload());
     }
@@ -1530,14 +1653,75 @@ function HistoryScreen({forcedRecord=null,onBack=null}){
   </div>;
 }
 
+// ─── LOGIN / SHIFOKOR PROFILI ─────────────────────────────────────────────────
+function LoginScreen({onLogin, lang, setLang}){
+  const t=T[lang]||T.uz; const s=t.login;
+  const [doctors]=useState(()=>{try{return JSON.parse(localStorage.getItem("breastai_doctors")||"[]")}catch{return[]}});
+  const [name,setName]=useState("");
+  const [dept,setDept]=useState("");
+  const [creating,setCreating]=useState(doctors.length===0);
+  const inp={width:"100%",padding:"11px 14px",borderRadius:12,border:"1px solid #DDE6ED",fontSize:14,color:"#0D1B2A",marginBottom:10,boxSizing:"border-box",outline:"none"};
+  return (
+    <div style={{minHeight:"100vh",background:"linear-gradient(135deg,#0B6E8A 0%,#1A7A5E 100%)",display:"flex",alignItems:"center",justifyContent:"center",padding:20,fontFamily:"system-ui,-apple-system,sans-serif"}}>
+      <div style={{background:"#fff",borderRadius:24,padding:32,width:"100%",maxWidth:400,boxShadow:"0 20px 60px rgba(0,0,0,.3)"}}>
+        <div style={{textAlign:"center",marginBottom:8}}>
+          <div style={{width:56,height:56,borderRadius:16,background:"#0B6E8A",display:"inline-flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:22,color:"#fff",marginBottom:12}}>B</div>
+          <div style={{fontSize:22,fontWeight:800,color:"#0D1B2A"}}>Breast AI</div>
+          <div style={{fontSize:13,color:"#52687A",marginTop:4}}>{s.subtitle}</div>
+        </div>
+        <div style={{display:"flex",gap:6,justifyContent:"center",margin:"14px 0"}}>
+          {["uz","ru","en"].map(l=>(
+            <button key={l} onClick={()=>setLang(l)} style={{padding:"4px 12px",borderRadius:8,fontSize:12,fontWeight:600,cursor:"pointer",border:lang===l?"1.5px solid #0B6E8A":"1px solid #DDE6ED",background:lang===l?"#E6F1FB":"#fff",color:lang===l?"#0B6E8A":"#52687A"}}>{l.toUpperCase()}</button>
+          ))}
+        </div>
+        {!creating&&doctors.length>0&&<div style={{marginBottom:14}}>
+          <div style={{fontSize:12,color:"#8FA4B2",marginBottom:8,fontWeight:600}}>{s.existing}</div>
+          {doctors.map(d=>(
+            <div key={d.id} onClick={()=>onLogin(d)} style={{display:"flex",alignItems:"center",gap:12,padding:"12px",borderRadius:12,border:"1px solid #DDE6ED",marginBottom:8,cursor:"pointer"}}
+              onMouseEnter={e=>e.currentTarget.style.background="#F7F9FC"} onMouseLeave={e=>e.currentTarget.style.background="#fff"}>
+              <div style={{width:40,height:40,borderRadius:12,background:"#0B6E8A",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,fontSize:14,color:"#fff"}}>{d.name.split(" ").map(w=>w[0]).slice(0,2).join("")}</div>
+              <div style={{flex:1}}><div style={{fontWeight:600,fontSize:14,color:"#0D1B2A"}}>{d.name}</div><div style={{fontSize:12,color:"#8FA4B2"}}>{d.dept}</div></div>
+              <span style={{color:"#8FA4B2",fontSize:18}}>›</span>
+            </div>
+          ))}
+          <button onClick={()=>setCreating(true)} style={{width:"100%",padding:11,borderRadius:12,border:"1px dashed #0B6E8A",background:"#E6F1FB",color:"#0B6E8A",fontWeight:600,fontSize:13,cursor:"pointer",marginTop:4}}>{s.newDoc}</button>
+        </div>}
+        {creating&&<div>
+          <input value={name} onChange={e=>setName(e.target.value)} placeholder={s.namePh} style={inp}/>
+          <input value={dept} onChange={e=>setDept(e.target.value)} placeholder={s.deptPh} style={inp}/>
+          <button onClick={()=>{ if(!name.trim())return; onLogin({id:slug(name),name:name.trim(),dept:dept.trim()||s.deptPh}); }}
+            style={{width:"100%",padding:13,borderRadius:12,border:"none",background:name.trim()?"#0B6E8A":"#DDE6ED",color:"#fff",fontWeight:700,fontSize:15,cursor:name.trim()?"pointer":"not-allowed"}}>{s.enter}</button>
+          {doctors.length>0&&<button onClick={()=>setCreating(false)} style={{width:"100%",padding:9,borderRadius:12,border:"none",background:"none",color:"#52687A",fontSize:13,cursor:"pointer",marginTop:6}}>← {s.existing}</button>}
+        </div>}
+      </div>
+    </div>
+  );
+}
+
 // ─── APP ──────────────────────────────────────────────────────────────────────
 export default function App(){
   const [lang,setLang]=useState("uz");
   const [dark,setDark]=useState(false);
   const [apiUrl,setApiUrlRaw]=useState(()=>{try{return localStorage.getItem("breastai_apiUrl")||"https://breast-ai-backend.onrender.com"}catch{return "https://breast-ai-backend.onrender.com"}});
   const setApiUrl=(u)=>{setApiUrlRaw(u);try{localStorage.setItem("breastai_apiUrl",u);}catch{}};
-  const [doctorName,setDoctorName]=useState(()=>{try{return localStorage.getItem("doctorName")||"Dr.Rashidova Mahliyo"}catch{return "Dr.Rashidova Mahliyo"}});
-  const [doctorDept,setDoctorDept]=useState(()=>{try{return localStorage.getItem("doctorDept")||"Diagnostika bo'limi"}catch{return "Diagnostika bo'limi"}});
+  // Shifokor profili (login / multi-doctor)
+  const [doctor,setDoctor]=useState(()=>{try{return JSON.parse(localStorage.getItem("breastai_currentDoctor")||"null")}catch{return null}});
+  const doctorName=doctor?doctor.name:"";
+  const doctorDept=doctor?doctor.dept:"";
+  const doctorId=doctor?doctor.id:"";
+  const [showAllDoctors,setShowAllDoctors]=useState(false);
+  function persistDoctor(d){ setDoctor(d); try{localStorage.setItem("breastai_currentDoctor",JSON.stringify(d));}catch{} }
+  function setDoctorName(n){ persistDoctor({...(doctor||{id:slug(n)}),name:n}); }
+  function setDoctorDept(dp){ persistDoctor({...(doctor||{}),dept:dp}); }
+  function login(doc){
+    persistDoctor(doc);
+    try{
+      const docs=JSON.parse(localStorage.getItem("breastai_doctors")||"[]");
+      if(!docs.find(d=>d.id===doc.id)){docs.push(doc);localStorage.setItem("breastai_doctors",JSON.stringify(docs));}
+    }catch{}
+  }
+  function logout(){ setDoctor(null); try{localStorage.removeItem("breastai_currentDoctor");}catch{} setTab("dashboard"); }
+
   const [tab,setTab]=useState("dashboard");
   const [selectedPatient,setSelectedPatient]=useState(null);
   const [showSearch,setShowSearch]=useState(false);
@@ -1545,18 +1729,21 @@ export default function App(){
   const [urgentNotif,setUrgentNotif]=useState(false);
   const [newAnalysisMod,setNewAnalysisMod]=useState(null);
   const [aiStatus,setAiStatus]=useState(null); // "ok" | "demo" | "offline"
-  const [history,setHistory]=useState(()=>{
+  const [rawHistory,setRawHistory]=useState(()=>{
     try{ return JSON.parse(localStorage.getItem("breastai_history")||"[]"); }
     catch{ return []; }
   });
+  // Joriy shifokor bemorlari (yoki barchasi — toggle)
+  const history=showAllDoctors?rawHistory:rawHistory.filter(h=>!h.doctorId||h.doctorId===doctorId);
   function addToHistory(record){
-    const updated=[record,...history].slice(0,100);
-    setHistory(updated);
+    const rec={...record,doctorId};
+    const updated=[rec,...rawHistory].slice(0,100);
+    setRawHistory(updated);
     try{ localStorage.setItem("breastai_history",JSON.stringify(updated)); }catch{}
     // Backend bazaga ham saqlash (fire-and-forget — offline bo'lsa localStorage yetarli)
     fetch(`${apiUrl}/api/history`,{
       method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify(record),signal:AbortSignal.timeout(15000)
+      body:JSON.stringify(rec),signal:AbortSignal.timeout(15000)
     }).catch(()=>{});
   }
 
@@ -1570,14 +1757,15 @@ export default function App(){
     return ()=>{cancelled=true;};
   },[apiUrl]);
 
-  // Backend'dagi tarixni localStorage bilan birlashtirish (id bo'yicha)
+  // Backend'dagi tarixni localStorage bilan birlashtirish (joriy shifokor bo'yicha)
   useEffect(()=>{
+    if(!doctorId) return;
     let cancelled=false;
-    fetch(`${apiUrl}/api/history`,{signal:AbortSignal.timeout(60000)})
+    fetch(`${apiUrl}/api/history?doctor=${encodeURIComponent(doctorId)}`,{signal:AbortSignal.timeout(60000)})
       .then(r=>r.json())
       .then(d=>{
         if(cancelled||!d.records||!d.records.length) return;
-        setHistory(prev=>{
+        setRawHistory(prev=>{
           const ids=new Set(prev.map(h=>String(h.id)));
           const merged=[...prev,...d.records.filter(r=>!ids.has(String(r.id)))]
             .sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,200);
@@ -1588,7 +1776,7 @@ export default function App(){
       .catch(()=>{});
     return ()=>{cancelled=true;};
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[apiUrl]);
+  },[apiUrl,doctorId]);
   const t=T[lang]||T.uz;
   const bg=dark?"#121920":"#EEF3F8", hbg=dark?"#1A232E":"#fff", hborder=dark?"#2E3A47":"#DDE6ED", tx=dark?"#E8EFF5":"#0D1B2A";
 
@@ -1599,9 +1787,7 @@ export default function App(){
 
   // Shoshilinch holat tekshirish
   useEffect(()=>{
-    const hist = JSON.parse(localStorage.getItem("breastai_history")||"[]");
-    const urgent = hist.filter(h=>h.birads>=4);
-    if(urgent.length>0) setUrgentNotif(true);
+    if(history.some(h=>h.birads>=4)) setUrgentNotif(true);
   },[history]);
 
   function renderContent(){
@@ -1613,8 +1799,13 @@ export default function App(){
     if(tab==="settings") return <Settings/>;
   }
 
+  // Login talab qilinadi
+  if(!doctor){
+    return <LoginScreen onLogin={login} lang={lang} setLang={setLang}/>;
+  }
+
   return (
-    <AppCtx.Provider value={{lang,t,setLang,dark,setDark,apiUrl,setApiUrl,history,addToHistory,doctorName,setDoctorName,doctorDept,setDoctorDept}}>
+    <AppCtx.Provider value={{lang,t,setLang,dark,setDark,apiUrl,setApiUrl,history,addToHistory,doctorName,setDoctorName,doctorDept,setDoctorDept,doctorId,logout,showAllDoctors,setShowAllDoctors}}>
       <div style={{fontFamily:"system-ui,-apple-system,sans-serif",background:bg,minHeight:"100vh",display:"flex",flexDirection:"column",transition:"background .3s"}}>
         <div style={{background:hbg,borderBottom:`1px solid ${hborder}`,padding:"13px 18px",display:"flex",alignItems:"center",gap:10,position:"sticky",top:0,zIndex:100,transition:"background .3s"}}>
           <div style={{width:32,height:32,borderRadius:10,background:"#0B6E8A",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:13,color:"#fff"}}>B</div>
