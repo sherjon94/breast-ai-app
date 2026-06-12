@@ -20,7 +20,8 @@ const T = {
     op:{ title:"Operating point (qaror chegarasi)", screening:"Skrining", balanced:"Muvozanat", confirm:"Tasdiqlash", screeningDesc:"Yuqori sezgirlik — saratonni o'tkazib yubormaslik", confirmDesc:"Yuqori spesifiklik — kam yolg'on signal", flagged:"⚠️ Tekshirish kerak", notFlagged:"Chegaradan past" },
     cls:{ normal:"Normal", benign:"Benign", malignant:"Malignant" },
     explain:{ btn:"🔥 Diqqat xaritasi", btnSeg:"✂️ Segmentatsiya", loading:"⏳ Hisoblanmoqda...", title:"AI diqqat xaritasi", desc:"Qizil-sariq hududlar — AI qarorida eng muhim sohalar (occlusion sensitivity)", segTitle:"O'simta segmentatsiyasi", segNote:"Taxminiy klassik usul (Otsu)", notFound:"O'choq topilmadi", diameter:"Ekvivalent diametr", areaPct:"Maydon ulushi" },
-    login:{ title:"Tizimga kirish", subtitle:"Shifokor profilini tanlang yoki yangi yarating", name:"F.I.O.", dept:"Bo'lim", enter:"Kirish", newDoc:"+ Yangi shifokor", existing:"Mavjud profillar", namePh:"Dr. Familiya Ism", deptPh:"Diagnostika bo'limi", switch:"Profilni almashtirish", logout:"Chiqish", myPatients:"Faqat mening bemorlarim", allPatients:"Barcha shifokorlar" },
+    followup:{ title:"📅 AI tavsiya — qayta ko'rik", now:"Tezkor — biopsi/onkolog zudlik bilan", months:"oydan keyin", next:"Keyingi ko'rik", phone:"Telefon raqami", phonePh:"+998 90 123 45 67", remindTitle:"🔔 Ko'rik vaqti kelgan bemorlar", remindEmpty:"Hozircha ko'rik vaqti kelgan bemor yo'q", call:"📞 Qo'ng'iroq", overdue:"Muddati o'tgan", soon:"Yaqinlashmoqda", daysLeft:"kun qoldi", daysOver:"kun o'tdi" },
+    login:{ subtitle:"Sut bezi diagnostika tizimi", loginTab:"Kirish", registerTab:"Ro'yxatdan o'tish", phone:"Telefon raqami", password:"Parol", name:"F.I.O.", specialization:"Mutaxassislik", clinic:"Klinika", license:"Litsenziya/diplom raqami", phonePh:"+998 90 123 45 67", namePh:"Dr. Familiya Ism Otasining ismi", passPh:"Kamida 4 belgi", specPh:"Masalan: Radiolog, Onkolog", clinicPh:"Klinika/shifoxona nomi", licensePh:"Litsenziya yoki diplom raqami", enter:"Kirish", register:"Ro'yxatdan o'tish", pendingMsg:"✓ Ro'yxatdan o'tdingiz! Admin hisobingizni tasdiqlagandan so'ng kirishingiz mumkin.", adminFirst:"Birinchi foydalanuvchi avtomatik ADMIN bo'ladi", logout:"Chiqish", myPatients:"Faqat mening bemorlarim", allPatients:"Barcha shifokorlar", adminPanel:"Admin — shifokorlar", approve:"Tasdiqlash", revoke:"Bekor", approved:"Tasdiqlangan", pending:"Kutilmoqda", role:"Rol", err:"Xatolik yuz berdi" },
   },
   ru: {
     appName:"Breast AI", appSub:"Мультимодальная диагностика", newAnalysis:"+ Новый анализ", back:"← Назад",
@@ -39,7 +40,8 @@ const T = {
     op:{ title:"Operating point (порог решения)", screening:"Скрининг", balanced:"Баланс", confirm:"Подтверждение", screeningDesc:"Высокая чувствительность — не пропустить рак", confirmDesc:"Высокая специфичность — меньше ложных тревог", flagged:"⚠️ Требует проверки", notFlagged:"Ниже порога" },
     cls:{ normal:"Normal", benign:"Benign", malignant:"Malignant" },
     explain:{ btn:"🔥 Карта внимания", btnSeg:"✂️ Сегментация", loading:"⏳ Вычисляется...", title:"Карта внимания ИИ", desc:"Красно-жёлтые зоны — самые важные области для решения ИИ (occlusion sensitivity)", segTitle:"Сегментация образования", segNote:"Приближённый классический метод (Otsu)", notFound:"Очаг не найден", diameter:"Эквивалентный диаметр", areaPct:"Доля площади" },
-    login:{ title:"Вход в систему", subtitle:"Выберите профиль врача или создайте новый", name:"Ф.И.О.", dept:"Отдел", enter:"Войти", newDoc:"+ Новый врач", existing:"Существующие профили", namePh:"Др. Фамилия Имя", deptPh:"Отдел диагностики", switch:"Сменить профиль", logout:"Выйти", myPatients:"Только мои пациенты", allPatients:"Все врачи" },
+    followup:{ title:"📅 ИИ рекомендация — повторный осмотр", now:"Срочно — биопсия/онколог немедленно", months:"мес. спустя", next:"Следующий осмотр", phone:"Номер телефона", phonePh:"+998 90 123 45 67", remindTitle:"🔔 Пациенты на повторный осмотр", remindEmpty:"Пока нет пациентов на осмотр", call:"📞 Позвонить", overdue:"Просрочено", soon:"Приближается", daysLeft:"дней осталось", daysOver:"дней прошло" },
+    login:{ subtitle:"Система диагностики груди", loginTab:"Вход", registerTab:"Регистрация", phone:"Номер телефона", password:"Пароль", name:"Ф.И.О.", specialization:"Специализация", clinic:"Клиника", license:"Номер лицензии/диплома", phonePh:"+998 90 123 45 67", namePh:"Др. Фамилия Имя Отчество", passPh:"Минимум 4 символа", specPh:"Например: Радиолог, Онколог", clinicPh:"Название клиники/больницы", licensePh:"Номер лицензии или диплома", enter:"Войти", register:"Зарегистрироваться", pendingMsg:"✓ Вы зарегистрированы! Вход возможен после подтверждения администратором.", adminFirst:"Первый пользователь автоматически становится АДМИНОМ", logout:"Выйти", myPatients:"Только мои пациенты", allPatients:"Все врачи", adminPanel:"Админ — врачи", approve:"Подтвердить", revoke:"Отменить", approved:"Подтверждён", pending:"Ожидает", role:"Роль", err:"Произошла ошибка" },
   },
   en: {
     appName:"Breast AI", appSub:"Multimodal Diagnostic System", newAnalysis:"+ New Analysis", back:"← Back",
@@ -58,12 +60,13 @@ const T = {
     op:{ title:"Operating point (decision threshold)", screening:"Screening", balanced:"Balanced", confirm:"Confirmation", screeningDesc:"High sensitivity — don't miss cancer", confirmDesc:"High specificity — fewer false alarms", flagged:"⚠️ Needs review", notFlagged:"Below threshold" },
     cls:{ normal:"Normal", benign:"Benign", malignant:"Malignant" },
     explain:{ btn:"🔥 Attention Map", btnSeg:"✂️ Segmentation", loading:"⏳ Computing...", title:"AI Attention Map", desc:"Red-yellow regions — most important areas for the AI decision (occlusion sensitivity)", segTitle:"Lesion Segmentation", segNote:"Approximate classical method (Otsu)", notFound:"No lesion found", diameter:"Equivalent diameter", areaPct:"Area fraction" },
-    login:{ title:"Sign in", subtitle:"Select a doctor profile or create a new one", name:"Full name", dept:"Department", enter:"Sign in", newDoc:"+ New doctor", existing:"Existing profiles", namePh:"Dr. Last First", deptPh:"Diagnostics dept.", switch:"Switch profile", logout:"Log out", myPatients:"Only my patients", allPatients:"All doctors" },
+    followup:{ title:"📅 AI recommendation — follow-up", now:"Urgent — biopsy/oncologist immediately", months:"months later", next:"Next checkup", phone:"Phone number", phonePh:"+998 90 123 45 67", remindTitle:"🔔 Patients due for checkup", remindEmpty:"No patients due for checkup yet", call:"📞 Call", overdue:"Overdue", soon:"Soon", daysLeft:"days left", daysOver:"days over" },
+    login:{ subtitle:"Breast diagnostic system", loginTab:"Sign in", registerTab:"Register", phone:"Phone number", password:"Password", name:"Full name", specialization:"Specialization", clinic:"Clinic", license:"License/diploma number", phonePh:"+998 90 123 45 67", namePh:"Dr. Last First Middle", passPh:"At least 4 characters", specPh:"e.g. Radiologist, Oncologist", clinicPh:"Clinic/hospital name", licensePh:"License or diploma number", enter:"Sign in", register:"Register", pendingMsg:"✓ Registered! You can sign in after the admin approves your account.", adminFirst:"The first user automatically becomes ADMIN", logout:"Log out", myPatients:"Only my patients", allPatients:"All doctors", adminPanel:"Admin — doctors", approve:"Approve", revoke:"Revoke", approved:"Approved", pending:"Pending", role:"Role", err:"An error occurred" },
   }
 };
 
 // ─── CONTEXT ──────────────────────────────────────────────────────────────────
-const AppCtx = createContext({ lang:"uz", t:T.uz, setLang:()=>{}, dark:false, setDark:()=>{}, apiUrl:"https://breast-ai-backend.onrender.com", setApiUrl:()=>{}, history:[], addToHistory:()=>{}, doctorName:"", doctorDept:"", doctorId:"", logout:()=>{}, showAllDoctors:false, setShowAllDoctors:()=>{} });
+const AppCtx = createContext({ lang:"uz", t:T.uz, setLang:()=>{}, dark:false, setDark:()=>{}, apiUrl:"https://breast-ai-backend.onrender.com", setApiUrl:()=>{}, history:[], addToHistory:()=>{}, doctorName:"", doctorDept:"", doctorId:"", token:"", isAdmin:false, user:null, logout:()=>{}, showAllDoctors:false, setShowAllDoctors:()=>{} });
 function useApp(){ return useContext(AppCtx); }
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
@@ -72,7 +75,10 @@ const BB={1:"#EAF3DE",2:"#EAF3DE",3:"#FAEEDA",4:"#FAECE7",5:"#FCEBEB",6:"#FCEBEB
 const bc=(c)=>BC[c]||"#2D9E6B";
 const bb=(c)=>BB[c]||"#EAF3DE";
 const mc=(m)=>m==="uzi"?"#0B6E8A":m==="mammo"?"#6A3DAA":"#1A7A5E";
-const slug=(s)=>(s||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"")||"doctor";
+// Qayta ko'rik intervali (oy) — BI-RADS bo'yicha (ACR ko'rsatmalariga yaqin)
+function followupMonths(birads){ return birads>=5?0:birads===4?2:birads===3?6:12; }
+function computeNextCheckup(birads, fromISO){ const m=followupMonths(birads); const d=fromISO?new Date(fromISO):new Date(); d.setMonth(d.getMonth()+m); return d.toISOString(); }
+const daysUntil=(iso)=>{ if(!iso)return null; return Math.ceil((new Date(iso)-new Date())/(1000*60*60*24)); };
 // ─── DOWNLOAD HELPER (data URI, works in sandbox) ────────────────────────────
 function dataDownload(content, filename){
   try {
@@ -258,6 +264,7 @@ function generatePDFReport(record, doctorName, doctorDept, images={}){
   <div class="grid">
     <div class="field"><label>F.I.O.</label><value>${record.patientName}</value></div>
     <div class="field"><label>Yosh / Jins</label><value>${record.patientAge||"—"} yosh / ${record.patientGender||"—"}</value></div>
+    <div class="field"><label>Telefon</label><value>${record.patientPhone||"—"}</value></div>
     <div class="field"><label>Tahlil sanasi</label><value>${date}</value></div>
     <div class="field"><label>Tahlil turi</label><value>${record.modality==="uzi"?"Ultrasound (UZI)":record.modality==="mammo"?"Mammografiya":"Kombinatsiya (UZI+Mammo)"}</value></div>
   </div>
@@ -302,8 +309,17 @@ ${record.density?`
   </table>
 </div>
 
+${record.nextCheckup?`
+<div class="section">
+  <div class="section-title">📅 Qayta ko'rik tavsiyasi (AI)</div>
+  <table>
+    <tr><td>Interval</td><td>${record.followupMonths===0?"Tezkor — zudlik bilan":record.followupMonths+" oydan keyin"}</td></tr>
+    <tr><td>Keyingi ko'rik sanasi</td><td>${new Date(record.nextCheckup).toLocaleDateString("uz-UZ",{year:"numeric",month:"long",day:"numeric"})}</td></tr>
+  </table>
+</div>`:""}
+
 <div class="warn">
-  ⚠️ <strong>Muhim eslatma:</strong> Bu hisobot AI yordamida yaratilgan va faqat dastlabki baholash uchun mo'ljallangan. 
+  ⚠️ <strong>Muhim eslatma:</strong> Bu hisobot AI yordamida yaratilgan va faqat dastlabki baholash uchun mo'ljallangan.
   Klinik qarorlar faqat malakali shifokor tomonidan qabul qilinishi kerak.
 </div>
 
@@ -579,6 +595,7 @@ function NewAnalysis({initialModality="uzi",onBack}){
   const [savedRecord,setSavedRecord]=useState(null);
   const [patientName,setPatientName]=useState("");
   const [patientAge,setPatientAge]=useState("");
+  const [patientPhone,setPatientPhone]=useState("");
   const [patientGender,setPatientGender]=useState("Ayol");
   const [patientNotes,setPatientNotes]=useState("");
   const tx=dark?"#E8EFF5":"#0D1B2A", ts=dark?"#8FA4B2":"#52687A";
@@ -634,6 +651,10 @@ function NewAnalysis({initialModality="uzi",onBack}){
             <option>Erkak</option>
           </select>
         </div>
+      </div>
+      <div style={{marginBottom:10}}>
+        <div style={{fontSize:12,color:ts,marginBottom:5}}>📞 {t.followup.phone}</div>
+        <input value={patientPhone} onChange={e=>setPatientPhone(e.target.value)} placeholder={t.followup.phonePh} style={inputStyle}/>
       </div>
       <div>
         <div style={{fontSize:12,color:ts,marginBottom:5}}>Qo'shimcha izoh</div>
@@ -765,6 +786,16 @@ function NewAnalysis({initialModality="uzi",onBack}){
         {apiResult.flagged_malignant?t.op.flagged:t.op.notFlagged} (OP={apiResult.operating_point})
       </div>}
       {ins&&<div style={{marginTop:10,padding:"8px 12px",background:"#EAF3DE",borderRadius:8,fontSize:12,color:"#2D9E6B",fontWeight:600}}>🎯 {t.newAnal.inSituNote}</div>}
+      {/* AI qayta ko'rik tavsiyasi */}
+      {(()=>{const fm=followupMonths(cat);const nd=computeNextCheckup(cat);return (
+        <div style={{marginTop:10,padding:"10px 12px",background:dark?"#263040":"#EEF3F8",borderRadius:8}}>
+          <div style={{fontSize:12,fontWeight:700,color:tx,marginBottom:3}}>{t.followup.title}</div>
+          <div style={{fontSize:13,color:fm===0?"#D63B3B":"#0B6E8A",fontWeight:600}}>
+            {fm===0?t.followup.now:`${fm} ${t.followup.months}`}
+            {fm>0&&<span style={{color:ts,fontWeight:400}}> · {t.followup.next}: {new Date(nd).toLocaleDateString("uz-UZ",{year:"numeric",month:"long",day:"numeric"})}</span>}
+          </div>
+        </div>
+      );})()}
       <div style={{marginTop:12}}><ConfBar value={result?result.conf:0.88}/></div>
 
       {/* Explainability — faqat rasm AI bilan tahlil qilinganda */}
@@ -886,16 +917,19 @@ function NewAnalysis({initialModality="uzi",onBack}){
       setLoading(false);
       setAnalyzed(true);
       setResult({cat:finalCat, sub:finalSub, conf:finalConf});
+      const nowISO = new Date().toISOString();
       const record = {
         id: Date.now().toString(),
-        date: new Date().toISOString(),
-        patientName, patientAge, patientGender, patientNotes,
+        date: nowISO,
+        patientName, patientAge, patientPhone, patientGender, patientNotes,
         modality: mod,
         birads: finalCat,
         biradsSub: finalSub,
         confidence: finalConf,
         apiUsed,
         imageThumb: thumb,
+        followupMonths: followupMonths(finalCat),
+        nextCheckup: computeNextCheckup(finalCat, nowISO),
         sizeA: mod!=="mammo"?sizeA:null,
         sizeB: mod!=="mammo"?sizeB:null,
         isInSitu: mod!=="mammo"&&sizeA<=10&&sizeB<=10,
@@ -1218,7 +1252,7 @@ function Statistics(){
 
 // ─── SETTINGS ─────────────────────────────────────────────────────────────────
 function Settings(){
-  const {lang,t,setLang,dark,setDark,apiUrl,setApiUrl,doctorName,setDoctorName,doctorDept,setDoctorDept,logout,showAllDoctors,setShowAllDoctors}=useApp();
+  const {lang,t,setLang,dark,setDark,apiUrl,setApiUrl,doctorName,setDoctorName,doctorDept,setDoctorDept,logout,showAllDoctors,setShowAllDoctors,isAdmin}=useApp();
   const s=t.settings;
   const [notif,setNotif]=useState(true);
   const [auto,setAuto]=useState(false);
@@ -1340,6 +1374,8 @@ function Settings(){
       {!editDoc&&<button onClick={logout} style={{width:"100%",marginTop:12,padding:10,borderRadius:10,border:"1px solid #FCEBEB",background:"#FCEBEB",color:"#D63B3B",fontWeight:600,fontSize:13,cursor:"pointer"}}>🚪 {t.login.logout}</button>}
     </Card>
 
+    {isAdmin&&<AdminPanel/>}
+
     <SSection title={s.sectionApp}>
       <SRow label={s.notif} icon="🔔" right={<Toggle value={notif} onChange={v=>{setNotif(v);toast2(v?s.toastNotifOn:s.toastNotifOff,v?"success":"info");}}/>}/>
       <SRow label={s.autoAnalysis} icon="⚡" right={<Toggle value={auto} onChange={v=>{setAuto(v);toast2(v?s.toastAutoOn:s.toastAutoOff,v?"success":"info");}}/>}/>
@@ -1351,7 +1387,7 @@ function Settings(){
           <option value="ru">Русский</option>
           <option value="en">English</option>
         </select>}/>
-      <SRow label={t.login.allPatients} icon="👥" right={<Toggle value={showAllDoctors} onChange={v=>{setShowAllDoctors(v);toast2(v?t.login.allPatients:t.login.myPatients,"info");}}/>}/>
+      {isAdmin&&<SRow label={t.login.allPatients} icon="👥" right={<Toggle value={showAllDoctors} onChange={v=>{setShowAllDoctors(v);toast2(v?t.login.allPatients:t.login.myPatients,"info");}}/>}/>}
     </SSection>
 
     <SSection title={s.sectionModel}>
@@ -1489,9 +1525,66 @@ function CompareScreen({onClose}){
   );
 }
 
+// ─── QAYTA KO'RIK ESLATMALARI ─────────────────────────────────────────────────
+function dueReminders(history){
+  // Har bemor uchun oxirgi tahlil; nextCheckup <=7 kun ichida yoki o'tgan bo'lsa
+  const byPatient={};
+  (history||[]).forEach(h=>{
+    if(!h.nextCheckup) return;
+    const key=h.patientName+"|"+(h.patientPhone||"");
+    if(!byPatient[key]||new Date(h.date)>new Date(byPatient[key].date)) byPatient[key]=h;
+  });
+  return Object.values(byPatient)
+    .map(h=>({...h,days:daysUntil(h.nextCheckup)}))
+    .filter(h=>h.days!==null&&h.days<=7)
+    .sort((a,b)=>a.days-b.days);
+}
+
+function RemindersScreen({onClose,onPatient}){
+  const {t,dark,history}=useApp();
+  const tx=dark?"#E8EFF5":"#0D1B2A", ts=dark?"#8FA4B2":"#52687A";
+  const due=dueReminders(history);
+  return (
+    <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.5)",zIndex:999,display:"flex",alignItems:"flex-start",justifyContent:"center",paddingTop:50,paddingLeft:16,paddingRight:16}}>
+      <div style={{background:dark?"#1A232E":"#fff",borderRadius:20,width:"100%",maxWidth:500,maxHeight:"85vh",overflowY:"auto",padding:20}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+          <div style={{fontSize:16,fontWeight:700,color:tx}}>{t.followup.remindTitle}</div>
+          <button onClick={onClose} style={{border:"none",background:"none",cursor:"pointer",fontSize:20,color:"#8FA4B2"}}>✕</button>
+        </div>
+        {due.length===0
+          ?<div style={{textAlign:"center",padding:"40px 0",color:"#8FA4B2"}}><div style={{fontSize:36,marginBottom:10}}>✅</div><div style={{fontSize:14}}>{t.followup.remindEmpty}</div></div>
+          :<div style={{display:"flex",flexDirection:"column",gap:10}}>
+            {due.map(h=>{
+              const over=h.days<0;
+              return <Card key={h.id} style={{borderColor:over?"#D63B3B55":"#E86B2A55"}}>
+                <div style={{display:"flex",alignItems:"flex-start",gap:12}}>
+                  <div onClick={()=>{onPatient&&onPatient(h);onClose();}} style={{flex:1,minWidth:0,cursor:"pointer"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:4}}>
+                      <span style={{fontWeight:600,fontSize:14,color:tx}}>{h.patientName}</span>
+                      <Badge cat={h.birads} sub={h.biradsSub}/>
+                    </div>
+                    <div style={{fontSize:12,fontWeight:600,color:over?"#D63B3B":"#E86B2A"}}>
+                      {over?`⚠️ ${t.followup.overdue} · ${Math.abs(h.days)} ${t.followup.daysOver}`:`${t.followup.soon} · ${h.days} ${t.followup.daysLeft}`}
+                    </div>
+                    <div style={{fontSize:11,color:ts,marginTop:2}}>{t.followup.next}: {new Date(h.nextCheckup).toLocaleDateString("uz-UZ",{year:"numeric",month:"long",day:"numeric"})}</div>
+                  </div>
+                  {h.patientPhone
+                    ?<a href={`tel:${h.patientPhone.replace(/[^+0-9]/g,"")}`} style={{textDecoration:"none",flexShrink:0}}>
+                      <div style={{padding:"8px 12px",borderRadius:10,background:"#2D9E6B",color:"#fff",fontSize:12,fontWeight:700,whiteSpace:"nowrap"}}>{t.followup.call}</div>
+                    </a>
+                    :<span style={{fontSize:11,color:"#8FA4B2",flexShrink:0}}>—</span>}
+                </div>
+              </Card>;
+            })}
+          </div>}
+      </div>
+    </div>
+  );
+}
+
 // ─── HISTORY SCREEN ───────────────────────────────────────────────────────────
 function HistoryScreen({forcedRecord=null,onBack=null}){
-  const {t,dark,history,doctorName,doctorDept,apiUrl,doctorId}=useApp();
+  const {t,dark,history,doctorName,doctorDept,apiUrl,doctorId,token}=useApp();
   const [search,setSearch]=useState("");
   const [selected,setSelected]=useState(forcedRecord);
   const tx=dark?"#E8EFF5":"#0D1B2A", ts=dark?"#8FA4B2":"#52687A";
@@ -1514,7 +1607,7 @@ function HistoryScreen({forcedRecord=null,onBack=null}){
         const kept=all.filter(h=>h.doctorId&&h.doctorId!==doctorId);
         localStorage.setItem("breastai_history",JSON.stringify(kept));
       }catch{}
-      fetch(`${apiUrl}/api/history?doctor=${encodeURIComponent(doctorId)}`,{method:"DELETE",signal:AbortSignal.timeout(15000)})
+      fetch(`${apiUrl}/api/history?token=${encodeURIComponent(token)}`,{method:"DELETE",signal:AbortSignal.timeout(15000)})
         .catch(()=>{})
         .finally(()=>window.location.reload());
     }
@@ -1549,6 +1642,7 @@ function HistoryScreen({forcedRecord=null,onBack=null}){
           <div>
             <div style={{fontWeight:700,fontSize:16,color:tx}}>{h.patientName}</div>
             <div style={{fontSize:13,color:ts}}>{h.patientAge&&`${h.patientAge} yosh · `}{h.patientGender}</div>
+            {h.patientPhone&&<div style={{fontSize:12,color:"#0B6E8A"}}><a href={`tel:${h.patientPhone.replace(/[^+0-9]/g,"")}`} style={{color:"#0B6E8A",textDecoration:"none"}}>📞 {h.patientPhone}</a></div>}
             <div style={{fontSize:11,color:"#8FA4B2"}}>{fmtDate(h.date)}</div>
           </div>
         </div>
@@ -1653,49 +1747,133 @@ function HistoryScreen({forcedRecord=null,onBack=null}){
   </div>;
 }
 
-// ─── LOGIN / SHIFOKOR PROFILI ─────────────────────────────────────────────────
-function LoginScreen({onLogin, lang, setLang}){
+// ─── LOGIN / RO'YXATDAN O'TISH (backend auth) ─────────────────────────────────
+function LoginScreen({onAuth, apiUrl, lang, setLang}){
   const t=T[lang]||T.uz; const s=t.login;
-  const [doctors]=useState(()=>{try{return JSON.parse(localStorage.getItem("breastai_doctors")||"[]")}catch{return[]}});
-  const [name,setName]=useState("");
-  const [dept,setDept]=useState("");
-  const [creating,setCreating]=useState(doctors.length===0);
+  const [mode,setMode]=useState("login"); // "login" | "register"
+  const [f,setF]=useState({phone:"",password:"",name:"",specialization:"",clinic:"",license:""});
+  const [err,setErr]=useState("");
+  const [info,setInfo]=useState("");
+  const [busy,setBusy]=useState(false);
+  const set=(k)=>(e)=>setF(p=>({...p,[k]:e.target.value}));
   const inp={width:"100%",padding:"11px 14px",borderRadius:12,border:"1px solid #DDE6ED",fontSize:14,color:"#0D1B2A",marginBottom:10,boxSizing:"border-box",outline:"none"};
+
+  async function submit(){
+    setErr("");setInfo("");
+    if(!f.phone.trim()||!f.password){setErr("Telefon va parolni kiriting");return;}
+    if(mode==="register"&&!f.name.trim()){setErr("F.I.O. ni kiriting");return;}
+    setBusy(true);
+    try{
+      const url=mode==="login"?"/api/auth/login":"/api/auth/register";
+      const body=mode==="login"?{phone:f.phone.trim(),password:f.password}:f;
+      const r=await fetch(`${apiUrl}${url}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body),signal:AbortSignal.timeout(60000)});
+      const d=await r.json().catch(()=>({}));
+      if(!r.ok){ setErr(d.detail||s.err); setBusy(false); return; }
+      if(mode==="register"){
+        if(d.token){ onAuth({token:d.token,user:d.user}); } // admin — darhol kiritish
+        else { setInfo(s.pendingMsg); setMode("login"); setF(p=>({...p,password:""})); }
+      } else {
+        onAuth({token:d.token,user:d.user});
+      }
+    }catch(e){ setErr("Backend bilan aloqa yo'q — internetni tekshiring"); }
+    setBusy(false);
+  }
+
+  const TabBtn=({m,label})=>(
+    <button onClick={()=>{setMode(m);setErr("");setInfo("");}} style={{flex:1,padding:"10px",borderRadius:10,fontSize:14,fontWeight:700,cursor:"pointer",border:"none",background:mode===m?"#0B6E8A":"transparent",color:mode===m?"#fff":"#52687A"}}>{label}</button>
+  );
+
   return (
     <div style={{minHeight:"100vh",background:"linear-gradient(135deg,#0B6E8A 0%,#1A7A5E 100%)",display:"flex",alignItems:"center",justifyContent:"center",padding:20,fontFamily:"system-ui,-apple-system,sans-serif"}}>
-      <div style={{background:"#fff",borderRadius:24,padding:32,width:"100%",maxWidth:400,boxShadow:"0 20px 60px rgba(0,0,0,.3)"}}>
-        <div style={{textAlign:"center",marginBottom:8}}>
+      <div style={{background:"#fff",borderRadius:24,padding:32,width:"100%",maxWidth:420,boxShadow:"0 20px 60px rgba(0,0,0,.3)",maxHeight:"94vh",overflowY:"auto"}}>
+        <div style={{textAlign:"center",marginBottom:16}}>
           <div style={{width:56,height:56,borderRadius:16,background:"#0B6E8A",display:"inline-flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:22,color:"#fff",marginBottom:12}}>B</div>
           <div style={{fontSize:22,fontWeight:800,color:"#0D1B2A"}}>Breast AI</div>
           <div style={{fontSize:13,color:"#52687A",marginTop:4}}>{s.subtitle}</div>
         </div>
-        <div style={{display:"flex",gap:6,justifyContent:"center",margin:"14px 0"}}>
+        <div style={{display:"flex",gap:6,justifyContent:"center",marginBottom:16}}>
           {["uz","ru","en"].map(l=>(
             <button key={l} onClick={()=>setLang(l)} style={{padding:"4px 12px",borderRadius:8,fontSize:12,fontWeight:600,cursor:"pointer",border:lang===l?"1.5px solid #0B6E8A":"1px solid #DDE6ED",background:lang===l?"#E6F1FB":"#fff",color:lang===l?"#0B6E8A":"#52687A"}}>{l.toUpperCase()}</button>
           ))}
         </div>
-        {!creating&&doctors.length>0&&<div style={{marginBottom:14}}>
-          <div style={{fontSize:12,color:"#8FA4B2",marginBottom:8,fontWeight:600}}>{s.existing}</div>
-          {doctors.map(d=>(
-            <div key={d.id} onClick={()=>onLogin(d)} style={{display:"flex",alignItems:"center",gap:12,padding:"12px",borderRadius:12,border:"1px solid #DDE6ED",marginBottom:8,cursor:"pointer"}}
-              onMouseEnter={e=>e.currentTarget.style.background="#F7F9FC"} onMouseLeave={e=>e.currentTarget.style.background="#fff"}>
-              <div style={{width:40,height:40,borderRadius:12,background:"#0B6E8A",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,fontSize:14,color:"#fff"}}>{d.name.split(" ").map(w=>w[0]).slice(0,2).join("")}</div>
-              <div style={{flex:1}}><div style={{fontWeight:600,fontSize:14,color:"#0D1B2A"}}>{d.name}</div><div style={{fontSize:12,color:"#8FA4B2"}}>{d.dept}</div></div>
-              <span style={{color:"#8FA4B2",fontSize:18}}>›</span>
-            </div>
-          ))}
-          <button onClick={()=>setCreating(true)} style={{width:"100%",padding:11,borderRadius:12,border:"1px dashed #0B6E8A",background:"#E6F1FB",color:"#0B6E8A",fontWeight:600,fontSize:13,cursor:"pointer",marginTop:4}}>{s.newDoc}</button>
-        </div>}
-        {creating&&<div>
-          <input value={name} onChange={e=>setName(e.target.value)} placeholder={s.namePh} style={inp}/>
-          <input value={dept} onChange={e=>setDept(e.target.value)} placeholder={s.deptPh} style={inp}/>
-          <button onClick={()=>{ if(!name.trim())return; onLogin({id:slug(name),name:name.trim(),dept:dept.trim()||s.deptPh}); }}
-            style={{width:"100%",padding:13,borderRadius:12,border:"none",background:name.trim()?"#0B6E8A":"#DDE6ED",color:"#fff",fontWeight:700,fontSize:15,cursor:name.trim()?"pointer":"not-allowed"}}>{s.enter}</button>
-          {doctors.length>0&&<button onClick={()=>setCreating(false)} style={{width:"100%",padding:9,borderRadius:12,border:"none",background:"none",color:"#52687A",fontSize:13,cursor:"pointer",marginTop:6}}>← {s.existing}</button>}
-        </div>}
+        <div style={{display:"flex",gap:4,background:"#EEF3F8",borderRadius:12,padding:4,marginBottom:16}}>
+          <TabBtn m="login" label={s.loginTab}/>
+          <TabBtn m="register" label={s.registerTab}/>
+        </div>
+        {info&&<div style={{background:"#EAF3DE",color:"#2D9E6B",borderRadius:10,padding:"10px 14px",fontSize:13,marginBottom:12,fontWeight:600}}>{info}</div>}
+        {err&&<div style={{background:"#FCEBEB",color:"#D63B3B",borderRadius:10,padding:"10px 14px",fontSize:13,marginBottom:12,fontWeight:600}}>⚠️ {err}</div>}
+
+        {mode==="register"&&<>
+          <div style={{fontSize:12,color:"#8FA4B2",marginBottom:5}}>{s.name} *</div>
+          <input value={f.name} onChange={set("name")} placeholder={s.namePh} style={inp}/>
+          <div style={{fontSize:12,color:"#8FA4B2",marginBottom:5}}>{s.specialization}</div>
+          <input value={f.specialization} onChange={set("specialization")} placeholder={s.specPh} style={inp}/>
+          <div style={{fontSize:12,color:"#8FA4B2",marginBottom:5}}>{s.clinic}</div>
+          <input value={f.clinic} onChange={set("clinic")} placeholder={s.clinicPh} style={inp}/>
+          <div style={{fontSize:12,color:"#8FA4B2",marginBottom:5}}>{s.license}</div>
+          <input value={f.license} onChange={set("license")} placeholder={s.licensePh} style={inp}/>
+        </>}
+        <div style={{fontSize:12,color:"#8FA4B2",marginBottom:5}}>{s.phone} *</div>
+        <input value={f.phone} onChange={set("phone")} placeholder={s.phonePh} style={inp}/>
+        <div style={{fontSize:12,color:"#8FA4B2",marginBottom:5}}>{s.password} *</div>
+        <input type="password" value={f.password} onChange={set("password")} placeholder={s.passPh} style={inp}
+          onKeyDown={e=>{if(e.key==="Enter")submit();}}/>
+        <button onClick={submit} disabled={busy}
+          style={{width:"100%",padding:13,borderRadius:12,border:"none",background:busy?"#8FA4B2":"#0B6E8A",color:"#fff",fontWeight:700,fontSize:15,cursor:busy?"wait":"pointer",marginTop:6}}>
+          {busy?"⏳...":mode==="login"?s.enter:s.register}
+        </button>
+        {mode==="register"&&<div style={{fontSize:11,color:"#8FA4B2",textAlign:"center",marginTop:10}}>ℹ️ {s.adminFirst}</div>}
       </div>
     </div>
   );
+}
+
+// ─── ADMIN PANEL ──────────────────────────────────────────────────────────────
+function AdminPanel(){
+  const {t,dark,apiUrl,token}=useApp();
+  const s=t.login;
+  const [doctors,setDoctors]=useState(null);
+  const [busy,setBusy]=useState("");
+  const tx=dark?"#E8EFF5":"#0D1B2A", ts=dark?"#8FA4B2":"#52687A";
+
+  function load(){
+    fetch(`${apiUrl}/api/admin/doctors?token=${encodeURIComponent(token)}`,{signal:AbortSignal.timeout(30000)})
+      .then(r=>r.json()).then(d=>setDoctors(d.doctors||[])).catch(()=>setDoctors([]));
+  }
+  useEffect(load,[apiUrl,token]);
+
+  async function approve(id,val){
+    setBusy(id);
+    try{
+      await fetch(`${apiUrl}/api/admin/approve`,{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({token,doctor_id:id,approved:val}),signal:AbortSignal.timeout(20000)});
+      load();
+    }catch{}
+    setBusy("");
+  }
+
+  return <div style={{marginBottom:20}}>
+    <div style={{fontSize:11,fontWeight:700,color:"#8FA4B2",marginBottom:8,textTransform:"uppercase",letterSpacing:"0.8px"}}>🛡 {s.adminPanel}</div>
+    <Card style={{padding:"4px 0"}}>
+      {doctors===null
+        ?<div style={{padding:16,textAlign:"center",color:"#8FA4B2",fontSize:13}}>⏳...</div>
+        :doctors.length===0
+        ?<div style={{padding:16,textAlign:"center",color:"#8FA4B2",fontSize:13}}>—</div>
+        :doctors.map(d=>(
+          <div key={d.id} style={{display:"flex",alignItems:"center",gap:10,padding:"11px 14px",borderTop:`0.5px solid ${dark?"#2E3A47":"#EEF3F8"}`}}>
+            <div style={{width:36,height:36,borderRadius:10,background:d.role==="admin"?"#6A3DAA":"#0B6E8A",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,fontSize:12,color:"#fff",flexShrink:0}}>{(d.name||"?").split(" ").map(w=>w[0]).slice(0,2).join("")}</div>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontSize:13,fontWeight:600,color:tx}}>{d.name} {d.role==="admin"&&<span style={{fontSize:10,color:"#6A3DAA",fontWeight:700}}>ADMIN</span>}</div>
+              <div style={{fontSize:11,color:ts}}>{d.phone} · {d.specialization||"—"}{d.clinic?` · ${d.clinic}`:""}</div>
+            </div>
+            {d.role!=="admin"&&(d.approved
+              ?<button disabled={busy===d.id} onClick={()=>approve(d.id,false)} style={{padding:"5px 10px",borderRadius:8,border:"1px solid #FCEBEB",background:"#FCEBEB",color:"#D63B3B",fontSize:11,fontWeight:600,cursor:"pointer",flexShrink:0}}>{s.revoke}</button>
+              :<button disabled={busy===d.id} onClick={()=>approve(d.id,true)} style={{padding:"5px 10px",borderRadius:8,border:"none",background:"#2D9E6B",color:"#fff",fontSize:11,fontWeight:600,cursor:"pointer",flexShrink:0}}>{s.approve}</button>)}
+            {d.role==="admin"&&<span style={{fontSize:11,color:"#2D9E6B",fontWeight:600}}>✓</span>}
+          </div>
+        ))}
+    </Card>
+  </div>;
 }
 
 // ─── APP ──────────────────────────────────────────────────────────────────────
@@ -1704,28 +1882,29 @@ export default function App(){
   const [dark,setDark]=useState(false);
   const [apiUrl,setApiUrlRaw]=useState(()=>{try{return localStorage.getItem("breastai_apiUrl")||"https://breast-ai-backend.onrender.com"}catch{return "https://breast-ai-backend.onrender.com"}});
   const setApiUrl=(u)=>{setApiUrlRaw(u);try{localStorage.setItem("breastai_apiUrl",u);}catch{}};
-  // Shifokor profili (login / multi-doctor)
-  const [doctor,setDoctor]=useState(()=>{try{return JSON.parse(localStorage.getItem("breastai_currentDoctor")||"null")}catch{return null}});
-  const doctorName=doctor?doctor.name:"";
-  const doctorDept=doctor?doctor.dept:"";
-  const doctorId=doctor?doctor.id:"";
+  // Auth (backend: token + user)
+  const [auth,setAuth]=useState(()=>{try{return JSON.parse(localStorage.getItem("breastai_auth")||"null")}catch{return null}});
+  const user=auth&&auth.user?auth.user:null;
+  const token=auth&&auth.token?auth.token:"";
+  const doctorId=user?user.id:"";
+  const doctorName=user?user.name:"";
+  const doctorDept=user?(user.specialization||user.clinic||""):"";
+  const isAdmin=user?user.role==="admin":false;
   const [showAllDoctors,setShowAllDoctors]=useState(false);
-  function persistDoctor(d){ setDoctor(d); try{localStorage.setItem("breastai_currentDoctor",JSON.stringify(d));}catch{} }
-  function setDoctorName(n){ persistDoctor({...(doctor||{id:slug(n)}),name:n}); }
-  function setDoctorDept(dp){ persistDoctor({...(doctor||{}),dept:dp}); }
-  function login(doc){
-    persistDoctor(doc);
-    try{
-      const docs=JSON.parse(localStorage.getItem("breastai_doctors")||"[]");
-      if(!docs.find(d=>d.id===doc.id)){docs.push(doc);localStorage.setItem("breastai_doctors",JSON.stringify(docs));}
-    }catch{}
+  function onAuth(a){ setAuth(a); try{localStorage.setItem("breastai_auth",JSON.stringify(a));}catch{} }
+  function setAuthUser(patch){ setAuth(a=>{const na={...a,user:{...a.user,...patch}}; try{localStorage.setItem("breastai_auth",JSON.stringify(na));}catch{} return na;}); }
+  function setDoctorName(n){ setAuthUser({name:n}); }
+  function setDoctorDept(dp){ setAuthUser({specialization:dp}); }
+  function logout(){
+    if(token) fetch(`${apiUrl}/api/auth/logout?token=${token}`,{method:"POST"}).catch(()=>{});
+    setAuth(null); try{localStorage.removeItem("breastai_auth");}catch{} setTab("dashboard");
   }
-  function logout(){ setDoctor(null); try{localStorage.removeItem("breastai_currentDoctor");}catch{} setTab("dashboard"); }
 
   const [tab,setTab]=useState("dashboard");
   const [selectedPatient,setSelectedPatient]=useState(null);
   const [showSearch,setShowSearch]=useState(false);
   const [showCompare,setShowCompare]=useState(false);
+  const [showReminders,setShowReminders]=useState(false);
   const [urgentNotif,setUrgentNotif]=useState(false);
   const [newAnalysisMod,setNewAnalysisMod]=useState(null);
   const [aiStatus,setAiStatus]=useState(null); // "ok" | "demo" | "offline"
@@ -1757,11 +1936,11 @@ export default function App(){
     return ()=>{cancelled=true;};
   },[apiUrl]);
 
-  // Backend'dagi tarixni localStorage bilan birlashtirish (joriy shifokor bo'yicha)
+  // Backend'dagi tarixni localStorage bilan birlashtirish (token bo'yicha rol-scoped)
   useEffect(()=>{
-    if(!doctorId) return;
+    if(!token) return;
     let cancelled=false;
-    fetch(`${apiUrl}/api/history?doctor=${encodeURIComponent(doctorId)}`,{signal:AbortSignal.timeout(60000)})
+    fetch(`${apiUrl}/api/history?token=${encodeURIComponent(token)}`,{signal:AbortSignal.timeout(60000)})
       .then(r=>r.json())
       .then(d=>{
         if(cancelled||!d.records||!d.records.length) return;
@@ -1776,7 +1955,7 @@ export default function App(){
       .catch(()=>{});
     return ()=>{cancelled=true;};
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[apiUrl,doctorId]);
+  },[apiUrl,token]);
   const t=T[lang]||T.uz;
   const bg=dark?"#121920":"#EEF3F8", hbg=dark?"#1A232E":"#fff", hborder=dark?"#2E3A47":"#DDE6ED", tx=dark?"#E8EFF5":"#0D1B2A";
 
@@ -1800,12 +1979,12 @@ export default function App(){
   }
 
   // Login talab qilinadi
-  if(!doctor){
-    return <LoginScreen onLogin={login} lang={lang} setLang={setLang}/>;
+  if(!auth){
+    return <LoginScreen onAuth={onAuth} apiUrl={apiUrl} lang={lang} setLang={setLang}/>;
   }
 
   return (
-    <AppCtx.Provider value={{lang,t,setLang,dark,setDark,apiUrl,setApiUrl,history,addToHistory,doctorName,setDoctorName,doctorDept,setDoctorDept,doctorId,logout,showAllDoctors,setShowAllDoctors}}>
+    <AppCtx.Provider value={{lang,t,setLang,dark,setDark,apiUrl,setApiUrl,history,addToHistory,doctorName,setDoctorName,doctorDept,setDoctorDept,doctorId,token,isAdmin,user,logout,showAllDoctors,setShowAllDoctors}}>
       <div style={{fontFamily:"system-ui,-apple-system,sans-serif",background:bg,minHeight:"100vh",display:"flex",flexDirection:"column",transition:"background .3s"}}>
         <div style={{background:hbg,borderBottom:`1px solid ${hborder}`,padding:"13px 18px",display:"flex",alignItems:"center",gap:10,position:"sticky",top:0,zIndex:100,transition:"background .3s"}}>
           <div style={{width:32,height:32,borderRadius:10,background:"#0B6E8A",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:13,color:"#fff"}}>B</div>
@@ -1813,6 +1992,12 @@ export default function App(){
           <div style={{marginLeft:"auto",display:"flex",gap:8,alignItems:"center"}}>
             <button onClick={()=>setShowSearch(true)} style={{width:36,height:36,borderRadius:10,border:`1px solid ${dark?"#2E3A47":"#DDE6ED"}`,background:dark?"#1E2733":"#fff",cursor:"pointer",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>🔍</button>
             <button onClick={()=>setShowCompare(true)} style={{width:36,height:36,borderRadius:10,border:`1px solid ${dark?"#2E3A47":"#DDE6ED"}`,background:dark?"#1E2733":"#fff",cursor:"pointer",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>⚖️</button>
+            {(()=>{const due=dueReminders(history).length;return (
+              <div style={{position:"relative",display:"inline-flex"}}>
+                <button onClick={()=>setShowReminders(true)} style={{width:36,height:36,borderRadius:10,border:`1px solid ${due>0?"#E86B2A":dark?"#2E3A47":"#DDE6ED"}`,background:due>0?"#FAECE7":dark?"#1E2733":"#fff",cursor:"pointer",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>📅</button>
+                {due>0&&<span style={{position:"absolute",top:-5,right:-5,minWidth:16,height:16,padding:"0 4px",borderRadius:8,background:"#E86B2A",color:"#fff",fontSize:10,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center",border:"2px solid #fff"}}>{due}</span>}
+              </div>
+            );})()}
             {urgentNotif&&<div style={{position:"relative",display:"inline-flex"}}>
               <button onClick={()=>{setUrgentNotif(false);goTab("patients");}} style={{width:36,height:36,borderRadius:10,border:"1px solid #E86B2A",background:"#FAECE7",cursor:"pointer",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>🔔</button>
               <span style={{position:"absolute",top:-4,right:-4,width:10,height:10,borderRadius:"50%",background:"#E86B2A",border:"2px solid #fff"}}/>
@@ -1827,6 +2012,7 @@ export default function App(){
         )}
         {showSearch&&<GlobalSearch onClose={()=>setShowSearch(false)} onPatient={p=>{setSelectedPatient(p);setShowSearch(false);}}/>}
         {showCompare&&<CompareScreen onClose={()=>setShowCompare(false)}/>}
+        {showReminders&&<RemindersScreen onClose={()=>setShowReminders(false)} onPatient={p=>{setSelectedPatient(p);setShowReminders(false);}}/>}
         <div style={{flex:1,overflowY:"auto",padding:16,paddingBottom:80}}>{renderContent()}</div>
         <div style={{position:"fixed",bottom:0,left:0,right:0,background:hbg,borderTop:`1px solid ${hborder}`,display:"flex",zIndex:100,transition:"background .3s"}}>
           {TABS.map((id,i)=>(
