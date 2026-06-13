@@ -903,7 +903,7 @@ function NewAnalysis({initialModality="uzi",onBack}){
           // Rasm yuklangan — AI model bilan tekshirish
           const formData = new FormData();
           formData.append("file", uploadedFile);
-          const imgRes = await fetch(`${apiUrl}/api/analyze/image?threshold=${opThreshold}`,{
+          const imgRes = await fetch(`${apiUrl}/api/analyze/image?threshold=${opThreshold}&modality=${mod}`,{
             method:"POST", body:formData, signal:AbortSignal.timeout(40000)
           });
           if(imgRes.ok){
