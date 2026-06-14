@@ -1999,8 +1999,8 @@ export default function App(){
     const updated=[rec,...rawHistory].slice(0,100);
     setRawHistory(updated);
     try{ localStorage.setItem("breastai_history",JSON.stringify(updated)); }catch{}
-    // Backend bazaga ham saqlash (fire-and-forget — offline bo'lsa localStorage yetarli)
-    fetch(`${apiUrl}/api/history`,{
+    // Backend bazaga ham saqlash (token bilan — autentifikatsiya talab qilinadi)
+    fetch(`${apiUrl}/api/history?token=${encodeURIComponent(token)}`,{
       method:"POST",headers:{"Content-Type":"application/json"},
       body:JSON.stringify(rec),signal:AbortSignal.timeout(15000)
     }).catch(()=>{});
